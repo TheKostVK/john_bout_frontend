@@ -1,4 +1,4 @@
-import { Table, TableColumnsType, theme } from "antd";
+import { Divider, Table, TableColumnsType, theme } from "antd";
 import React, { useEffect } from "react";
 import { useLazyGetCustomersQuery } from "../../../services/customersService";
 import { useDispatch, useSelector } from "react-redux";
@@ -101,7 +101,7 @@ const CustomerArm = () => {
 
     return (
         <div>
-            <p className={ 'my-2' }>customerArm</p>
+            <Divider orientation="left">customerArm</Divider>
 
             <div>
                 <Table

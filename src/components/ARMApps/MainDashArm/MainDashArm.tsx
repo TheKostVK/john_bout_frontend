@@ -1,4 +1,4 @@
-import { Layout, Menu, type MenuProps, theme } from "antd";
+import { Divider, Layout, Menu, type MenuProps, theme } from "antd";
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
 import React from "react";
 
@@ -34,7 +34,7 @@ const MainDashArm = () => {
 
     return (
         <div>
-            <p>mainDashArm</p>
+            <Divider orientation="left">mainDashArm</Divider>
         </div>
     )
 };

@@ -1,6 +1,6 @@
 import { Card, Col, Image, Row, Typography } from "antd";
 import React from "react";
-import { IProductTable } from "../ManufacturingArm";
+import { IProductTable } from "../../ManufacturingArm";
 
 const { Title } = Typography;
 
@@ -9,8 +9,6 @@ const { Title } = Typography;
  * @param product - товар для отображения
  */
 const RowCard = ({ product }: { product: IProductTable }) => {
-
-    console.log(product);
 
     return (
         <Card title={ product.name } bordered={ false }>

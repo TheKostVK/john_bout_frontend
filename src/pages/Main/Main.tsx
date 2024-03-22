@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Layout, Menu, type MenuProps, theme } from 'antd';
+import { Breadcrumb, Layout, theme } from 'antd';
 import AppHeader from "../../components/AppHeader/AppHeader";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { DEFAULT_MODULE, LS_KEYS, MODULES_ENUM } from "../../constants";
 import MainDashArm from "../../components/ARMApps/MainDashArm/MainDashArm";
 import CustomerArm from "../../components/ARMApps/CustomersArm/CustomerArm";
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
 import ManufacturingArm from "../../components/ARMApps/ManufacturingArm/ManufacturingArm";
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Footer } = Layout;
 
 
 const Main: React.FC = () => {
@@ -19,26 +18,6 @@ const Main: React.FC = () => {
     const navigate: NavigateFunction = useNavigate();
 
     const [moduleId, setModuleId] = useState<number>(Number(localStorage.getItem(LS_KEYS.moduleId)) || DEFAULT_MODULE);
-
-    const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-        (icon, index) => {
-            const key = String(index + 1);
-
-            return {
-                key: `sub${ key }`,
-                icon: React.createElement(icon),
-                label: `subnav ${ key }`,
-
-                children: new Array(4).fill(null).map((_, j) => {
-                    const subKey: number = index * 4 + j + 1;
-                    return {
-                        key: subKey,
-                        label: `option${ subKey }`,
-                    };
-                }),
-            };
-        },
-    );
 
     /**
      * Проверяет текущий модуль и обрабатывает ситуации, когда необходимо изменить рабочую область.
@@ -73,21 +52,12 @@ const Main: React.FC = () => {
                     style={ {
                         height: '90%',
                         padding: '24px 0',
-                        overflow: "scroll",
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG
                     } }
                 >
-                    <Sider width={ 200 } style={ { background: colorBgContainer } }>
-                        <Menu
-                            mode="inline"
-                            style={ { borderRight: 0 } }
-                            items={ items2 }
-                        />
-                    </Sider>
-
                     <div
-                        style={ { margin: '24px', height: "auto", minWidth: '400px', overflow: "scroll" } }
+                        style={ { margin: '24px', height: "auto", minWidth: '400px' } }
                     >
                         { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }

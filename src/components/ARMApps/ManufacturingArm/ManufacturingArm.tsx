@@ -1,68 +1,63 @@
-import { Card, Table, TableColumnsType } from "antd";
-import React, { useEffect } from "react";
+import { Layout, Menu, type MenuProps, Divider, theme } from "antd";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import messageUtility from "../../utility/messageUtility";
 import { IGetProductsListResponse, IProduct } from "../../../services/interface/IProductsService";
 import { useLazyGetProductsQuery } from "../../../services/productsService";
 import { setProducts } from "../../../store/reducers/productsSlice";
-import { Typography } from 'antd';
-import RowCard from "./RowCard/RowCard";
+import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
+import TableManufacturing from "./TableManufacturing/TableManufacturing";
 
-const { Title } = Typography;
+const { Sider } = Layout;
 
 export interface IProductTable extends IProduct {
     key: number;
 }
 
 const ManufacturingArm = () => {
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
     const { products } = useSelector((state: RootState) => state.productReducer);
-    const [tableData, setTableData] = React.useState<IProductTable[]>([]);
+    const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
+    const [tableData, setTableData] = useState<IProductTable[]>([]);
 
     const [getProducts] = useLazyGetProductsQuery();
 
     const dispatch = useDispatch();
 
     /**
-     * Описание столбцов таблицы.
+     * Содержимое бокового меню.
      */
-    const columns: TableColumnsType<IProductTable> = [
+    const menuItems: MenuProps['items'] = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            width: 50,
+            key: `productList`,
+            icon: <OrderedListOutlined/>,
+            label: `Список товаров`,
         },
         {
-            title: 'Имя',
-            dataIndex: 'name',
-            width: 150,
-        },
-        {
-            title: 'Тип',
-            dataIndex: 'product_type',
-            width: 150,
-        },
-        {
-            title: 'Количество',
-            dataIndex: 'quantity',
-            width: 120,
-        },
-        {
-            title: 'Зарезервировано',
-            dataIndex: 'reserved_quantity',
-            width: 120,
-        },
-        {
-            title: 'Склад',
-            dataIndex: 'storage_location',
-            width: 150,
-        },
-        {
-            title: 'Цена за единицу',
-            dataIndex: 'price',
-            width: 150,
+            key: `createProduct`,
+            icon: <AppstoreAddOutlined />,
+            label: `Создание товара`,
         },
     ];
+
+    /**
+     * Обработчик нажатия на боковое меню.
+     */
+    const onClickMenu: MenuProps['onClick'] = (e) => {
+        switch (e.key) {
+            case `productList`:
+                setCurrentMenuOptions(0);
+                break;
+            case `createProduct`:
+                setCurrentMenuOptions(1);
+                break;
+            default:
+                break;
+        }
+    };
 
     /**
      * Получение списка клиентов.
@@ -108,27 +103,24 @@ const ManufacturingArm = () => {
         handleGetProducts();
     }, []);
 
-    // https://www.imfdb.org/images/3/35/AK-12M1_2023.jpg
-
     return (
-        <div>
-            <p className={ 'my-2' }>manufacturingArm</p>
+        <div className={ 'flex space-x-1' }>
+            <Sider width={ 200 } style={ { background: colorBgContainer } }>
+                <Menu
+                    onClick={ onClickMenu }
+                    mode="inline"
+                    defaultSelectedKeys={ [`productList`] }
+                    style={ { borderRight: 0 } }
+                    items={ menuItems }
+                />
+            </Sider>
 
             <div>
-                <Table
-                    columns={ columns }
-                    dataSource={ tableData }
-                    pagination={ false }
-                    scroll={ { x: 300, y: 650 } }
-                    expandable={ {
-                        expandedRowRender: (product: IProductTable) => {
-                            return (
-                                <RowCard product={ product }/>
-                            );
-                        },
-                        rowExpandable: (product: IProductTable) => product.name !== 'Нет данных',
-                    } }
-                />
+                <Divider orientation="left">manufacturingArm</Divider>
+
+                <div>
+                    { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
+                </div>
             </div>
         </div>
     );

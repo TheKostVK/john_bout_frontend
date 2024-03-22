@@ -7,7 +7,7 @@ import { setCustomers } from "../../../store/reducers/customersSlice";
 import { ICustomer, IGetCustomersListResponse } from "../../../services/interface/ICustomersService";
 import messageUtility from "../../utility/messageUtility";
 
-interface ICustomerTable extends ICustomer{
+interface ICustomerTable extends ICustomer {
     key: number;
 }
 
@@ -22,11 +22,11 @@ const CustomerArm = () => {
     /**
      * Описание столбцов таблицы.
      */
-    const columns: TableColumnsType<ICustomer> = [
+    const columns: TableColumnsType<ICustomerTable> = [
         {
             title: 'ID',
             dataIndex: 'id',
-            width: 150,
+            width: 50,
         },
         {
             title: 'Имя',
@@ -51,7 +51,7 @@ const CustomerArm = () => {
         {
             title: 'Валюта',
             dataIndex: 'currency',
-            width: 150,
+            width: 50,
         },
     ];
 
@@ -100,7 +100,7 @@ const CustomerArm = () => {
     }, []);
 
     return (
-        <div className={ 'flex' }>
+        <div>
             <p className={ 'my-2' }>customerArm</p>
 
             <div>

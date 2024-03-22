@@ -6,7 +6,7 @@ import { BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./authService";
 import { IGetProductsListResponse } from "./interface/IProductsService";
 
-const API: string = `http://${BASE_URL}/customers`;
+const API: string = `http://${BASE_URL}/products`;
 
 export const productService = createApi({
     reducerPath: "productService",
@@ -14,9 +14,9 @@ export const productService = createApi({
     tagTypes: ['Products'],
 
     endpoints: (builder: EndpointBuilder<BaseQueryFn<string | FetchArgs, unknown, ICustomError, {}, {}>, "Products", "productService">) => ({
-        getProducts: builder.query<IGetProductsListResponse, string>({
+        getProducts: builder.query<IGetProductsListResponse, void>({
             query: (): string | FetchArgs => ({
-                url: `${API}/`,
+                url: `${API}`,
                 method: 'GET',
             }),
             providesTags: ['Products']
@@ -25,5 +25,5 @@ export const productService = createApi({
 });
 
 export const {
-    useGetProductsQuery,
+    useLazyGetProductsQuery,
 } = productService;

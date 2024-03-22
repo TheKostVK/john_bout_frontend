@@ -6,6 +6,7 @@ import { DEFAULT_MODULE, LS_KEYS, MODULES_ENUM } from "../../constants";
 import MainDashArm from "../../components/ARMApps/MainDashArm/MainDashArm";
 import CustomerArm from "../../components/ARMApps/CustomersArm/CustomerArm";
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
+import ManufacturingArm from "../../components/ARMApps/ManufacturingArm/ManufacturingArm";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -70,8 +71,9 @@ const Main: React.FC = () => {
 
                 <Layout
                     style={ {
-                        height: '100%',
+                        height: '90%',
                         padding: '24px 0',
+                        overflow: "scroll",
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG
                     } }
@@ -79,18 +81,17 @@ const Main: React.FC = () => {
                     <Sider width={ 200 } style={ { background: colorBgContainer } }>
                         <Menu
                             mode="inline"
-                            defaultSelectedKeys={ ['1'] }
-                            defaultOpenKeys={ ['sub1'] }
-                            style={ { height: '100%', borderRight: 0 } }
+                            style={ { borderRight: 0 } }
                             items={ items2 }
                         />
                     </Sider>
 
                     <div
-                        style={ { margin: '24px', minWidth: '400px' } }
+                        style={ { margin: '24px', height: "auto", minWidth: '400px', overflow: "scroll" } }
                     >
                         { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
+                        { moduleId === MODULES_ENUM.manufacturing && <ManufacturingArm/> }
                     </div>
                 </Layout>
             </Content>

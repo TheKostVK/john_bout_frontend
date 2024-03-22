@@ -1,7 +1,7 @@
 /**
  * Интерфейс модели товара
  */
-export interface IProducts {
+export interface IProduct {
     id: number,
     name: string,
     characteristics: any[],
@@ -22,6 +22,6 @@ export interface IProducts {
  */
 export interface IGetProductsListResponse {
     success: boolean,
-    products: IProducts[],
+    data: IProduct[],
     message?: string
 }

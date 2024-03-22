@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import reducers from "./reducers";
 import { productService } from "../services/productsService";
+import { customersService } from "../services/customersService";
 
 const rootReducer = combineReducers(reducers);
 
@@ -11,6 +12,7 @@ export const setupStore = () => {
             getDefaultMiddleware()
                 .concat(
                     productService.middleware,
+                    customersService.middleware
                 )
     })
 }

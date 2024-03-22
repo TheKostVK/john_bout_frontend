@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IProducts } from "../../services/interface/IProductsService";
+import { IProduct } from "../../services/interface/IProductsService";
 
 
 export interface ProductsState {
-    products: IProducts[]
+    products: IProduct[]
 }
 
 const initialState: ProductsState = {
@@ -17,10 +17,14 @@ export const productsSlice = createSlice({
         /**
          * Хранит товары.
          */
-        setProducts: (state, action: PayloadAction<IProducts[]>): void => {
+        setProducts: (state, action: PayloadAction<IProduct[]>): void => {
             state.products = action.payload;
         },
     },
-})
+});
+
+export const {
+    setProducts,
+} = productsSlice.actions;
 
 export default productsSlice.reducer

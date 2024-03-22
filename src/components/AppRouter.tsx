@@ -9,6 +9,11 @@ const AppRouter = () => {
         <Routes>
             {/* Маршруты для авторизованных пользователей */ }
             <Route path="/" element={ <Main/> }/>
+            <Route path="/customers" element={ <Main /> }/>
+            <Route path="/manufacturing" element={ <Main /> }/>
+            <Route path="/warehouse" element={ <Main /> }/>
+            <Route path="/contracts" element={ <Main /> }/>
+
 
             {/* Дополнительные маршруты */ }
             <Route path="/*" element={ <Page404/> }/>

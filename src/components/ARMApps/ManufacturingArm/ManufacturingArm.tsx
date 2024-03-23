@@ -8,6 +8,7 @@ import { useLazyGetProductsQuery } from "../../../services/productsService";
 import { setProducts } from "../../../store/reducers/productsSlice";
 import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
 import TableManufacturing from "./TableManufacturing/TableManufacturing";
+import FormProduct from "./FormProduct/FormProduct";
 
 const { Sider } = Layout;
 
@@ -38,7 +39,7 @@ const ManufacturingArm = () => {
         },
         {
             key: `createProduct`,
-            icon: <AppstoreAddOutlined />,
+            icon: <AppstoreAddOutlined/>,
             label: `Создание товара`,
         },
     ];
@@ -104,7 +105,7 @@ const ManufacturingArm = () => {
     }, []);
 
     return (
-        <div className={ 'flex space-x-1' }>
+        <div className={ 'flex space-x-1' } style={ { width: '100%' } }>
             <Sider width={ 200 } style={ { background: colorBgContainer } }>
                 <Menu
                     onClick={ onClickMenu }
@@ -120,6 +121,7 @@ const ManufacturingArm = () => {
 
                 <div>
                     { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
+                    { currentMenuOptions === 1 && <FormProduct isCreate={ true }/> }
                 </div>
             </div>
         </div>

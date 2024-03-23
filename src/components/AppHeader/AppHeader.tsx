@@ -15,7 +15,7 @@ const AppHeader = () => {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={ ['2'] }
+                defaultSelectedKeys={ ['1'] }
                 items={[
                     {
                         key: 0,

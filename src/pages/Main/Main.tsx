@@ -57,7 +57,7 @@ const Main: React.FC = () => {
                     } }
                 >
                     <div
-                        style={ { margin: '24px', height: "auto", minWidth: '400px' } }
+                        style={ { margin: '24px', height: "auto", minWidth: '96%' } }
                     >
                         { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }

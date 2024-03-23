@@ -28,7 +28,7 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                 <Col span={ 8 }>
                     <Card title="Изображение товара">
                         <Image
-                            width={ 400 }
+                            width={ 250 }
                             src={ product.image_url }
                             preview={ false }
                             alt={ 'Нет изображения' }

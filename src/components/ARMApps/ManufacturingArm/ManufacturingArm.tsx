@@ -47,7 +47,7 @@ const ManufacturingArm = () => {
     /**
      * Обработчик нажатия на боковое меню.
      */
-    const onClickMenu: MenuProps['onClick'] = (e) => {
+    const onClickMenu: MenuProps['onClick'] = (e): void => {
         switch (e.key) {
             case `productList`:
                 setCurrentMenuOptions(0);
@@ -63,10 +63,10 @@ const ManufacturingArm = () => {
     /**
      * Получение списка клиентов.
      */
-    const handleGetProducts = () => {
+    const handleGetProducts = (): void => {
         getProducts()
             .unwrap()
-            .then((productsResp: IGetProductsListResponse) => {
+            .then((productsResp: IGetProductsListResponse): void => {
                 dispatch(setProducts(productsResp.data));
             }).catch((err) => {
             console.error(err);
@@ -82,10 +82,10 @@ const ManufacturingArm = () => {
     /**
      * Обновляет данные таблицы при изменении списка клиентов.
      */
-    useEffect(() => {
+    useEffect((): void => {
         let data: IProductTable[] = [];
 
-        products.map((product: IProduct, index: number) => {
+        products.map((product: IProduct, index: number): void => {
             data.push({
                 key: index,
                 ...product
@@ -98,14 +98,14 @@ const ManufacturingArm = () => {
     /**
      * Получение списка клиентов при первом открытии АРМа.
      */
-    useEffect(() => {
+    useEffect((): void => {
         if (products.length !== 0) return;
 
         handleGetProducts();
     }, []);
 
     return (
-        <div className={ 'flex space-x-1' } style={ { width: '100%' } }>
+        <div className={ 'flex space-x-11' } style={ { width: '100%' } }>
             <Sider width={ 200 } style={ { background: colorBgContainer } }>
                 <Menu
                     onClick={ onClickMenu }
@@ -116,14 +116,8 @@ const ManufacturingArm = () => {
                 />
             </Sider>
 
-            <div>
-                <Divider orientation="left">manufacturingArm</Divider>
-
-                <div>
-                    { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
-                    { currentMenuOptions === 1 && <FormProduct isCreate={ true }/> }
-                </div>
-            </div>
+            { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
+            { currentMenuOptions === 1 && <FormProduct isCreate={ true }/> }
         </div>
     );
 };

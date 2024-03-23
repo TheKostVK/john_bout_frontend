@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, Row, Col } from "antd";
+import { Button, Form, Input, Select, Row, Col, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -153,49 +153,126 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     /**
      * Обработчик смены типа товара.
      */
-    const handleTypeChange = (value: string) => {
+    const handleTypeChange = (value: string): void => {
         setSelectedType(value);
         setSubtypes(typeToSubtypes[value] || []);
         form.setFieldsValue({ subtype: undefined });
     };
 
     return (
-        <Row className={ 'mb-5' } gutter={ [16, 16] }>
+        <>
             <Form
                 form={ form }
                 onFinish={ onFinish }
                 initialValues={ initialValues }
                 layout="vertical"
+                className={ 'w-full' }
             >
-                <Form.Item
-                    name="name"
-                    label="Название"
-                    rules={ [{ required: true, message: 'Введите название товара' }] }
-                >
-                    <Input placeholder="Название товара"/>
-                </Form.Item>
-                <Form.Item
-                    name="product_type"
-                    label="Тип"
-                    rules={ [{ required: true, message: 'Выберите тип товара' }] }
-                >
-                    <Select placeholder="Выберите тип товара" onChange={ handleTypeChange }>
-                        { Object.keys(typeToSubtypes).map(type => (
-                            <Option key={ type } value={ type }>{ type }</Option>
-                        )) }
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    name="subtype"
-                    label="Подтип"
-                    rules={ [{ required: true, message: 'Выберите подтип товара' }] }
-                >
-                    <Select placeholder="Выберите подтип товара" disabled={ !selectedType }>
-                        { selectedType && typeToSubtypes[selectedType].map(subtype => (
-                            <Option key={ subtype } value={ subtype }>{ subtype }</Option>
-                        )) }
-                    </Select>
-                </Form.Item>
+                <Divider>Создание товара</Divider>
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="name"
+                            label="Название"
+                            rules={ [{ required: true, message: 'Введите название товара' }] }
+                        >
+                            <Input placeholder="Название товара"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 6 }>
+                        <Form.Item
+                            name="product_type"
+                            label="Тип"
+                            rules={ [{ required: true, message: 'Выберите тип товара' }] }
+                        >
+                            <Select placeholder="Выберите тип товара" onChange={ handleTypeChange }>
+                                { Object.keys(typeToSubtypes).map((type: string) => (
+                                    <Option key={ type } value={ type }>{ type }</Option>
+                                )) }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 10 }>
+                        <Form.Item
+                            name="subtype"
+                            label="Подтип"
+                            rules={ [{ required: true, message: 'Выберите подтип товара' }] }
+                        >
+                            <Select placeholder="Выберите подтип товара" disabled={ !selectedType }>
+                                { selectedType && typeToSubtypes[selectedType].map(subtype => (
+                                    <Option key={ subtype } value={ subtype }>{ subtype }</Option>
+                                )) }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 24 }>
+                        <Form.Item
+                            name="imgUrl"
+                            label="URL изображения товара"
+                            rules={ [{ required: true, message: 'Введите URL изображения товара' }] }
+                        >
+                            <Input placeholder="URL изображения товара"/>
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="quantity"
+                            label="Количество товара на складе"
+                            rules={ [{ required: true, message: 'Введите количество товара' }] }
+                        >
+                            <Input type="number" placeholder="Количество товара"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="occupied_space"
+                            label="Занимаемое место товаром"
+                            rules={ [{ required: true, message: 'Введите занимаемое место товаром' }] }
+                        >
+                            <Input type="number" placeholder="Занимаемое место"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="storage_location"
+                            label="Склад хранения товара"
+                            rules={ [{ required: true, message: 'Введите номер склада для хранения товара' }] }
+                        >
+                            <Input type="number" placeholder="Номер склада"/>
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="production_cost"
+                            label="Стоимость производства одной единицы товара"
+                            rules={ [{ required: true, message: 'Введите стоимость производства' }] }
+                        >
+                            <Input type="number" placeholder="Стоимость производства"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="price"
+                            label="Стоимость продажи одной единицы товара"
+                            rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
+                        >
+                            <Input type="number" placeholder="Стоимость продажи"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+
+                    </Col>
+                </Row>
+
                 <Form.Item
                     name="characteristics"
                     label="Характеристики"
@@ -253,7 +330,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     </Button>
                 </Form.Item>
             </Form>
-        </Row>
+        </>
     );
 };
 

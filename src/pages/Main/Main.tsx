@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Layout, theme } from 'antd';
+import { Breadcrumb, Layout, theme, ThemeConfig } from 'antd';
 import AppHeader from "../../components/AppHeader/AppHeader";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { DEFAULT_MODULE, LS_KEYS, MODULES_ENUM } from "../../constants";
@@ -12,7 +12,7 @@ const { Content, Footer } = Layout;
 
 const Main: React.FC = () => {
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: { colorBgContainer, borderRadiusLG, colorBgBase },
     } = theme.useToken();
 
     const navigate: NavigateFunction = useNavigate();
@@ -40,7 +40,7 @@ const Main: React.FC = () => {
     useEffect(checkModule, [navigate]);
 
     return (
-        <Layout style={ { height: '100vh', width: '100vw' } }>
+        <Layout style={ { minHeight: '100vh', background: colorBgBase, } }>
             <AppHeader/>
 
             <Content style={ { padding: '0 48px' } }>
@@ -50,14 +50,14 @@ const Main: React.FC = () => {
 
                 <Layout
                     style={ {
-                        height: '90%',
+                        minHeight: '70vh',
                         padding: '24px 0',
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG
                     } }
                 >
                     <div
-                        style={ { margin: '24px', height: "auto", minWidth: '96%' } }
+                        style={ { margin: '24px', minWidth: '96%' } }
                     >
                         { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
@@ -65,8 +65,8 @@ const Main: React.FC = () => {
                     </div>
                 </Layout>
             </Content>
-            <Footer style={ { textAlign: 'center' } }>
-                TheKost ©{ new Date().getFullYear() }
+            <Footer style={ { textAlign: 'center', background: colorBgBase} }>
+                УВЗ ©{ new Date().getFullYear() }
             </Footer>
         </Layout>
     );

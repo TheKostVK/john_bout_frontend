@@ -52,14 +52,14 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }
-            scroll={ { x: 300, y: 600 } }
+            scroll={ { x: 300, y: 300 } }
             expandable={ {
                 expandedRowRender: (product: IProductTable) => {
                     return (
                         <RowCard product={ product }/>
                     );
                 },
-                rowExpandable: (product: IProductTable) => product.name !== 'Нет данных',
+                rowExpandable: (product: IProductTable): boolean => product.name !== 'Нет данных',
             } }
         />
     );

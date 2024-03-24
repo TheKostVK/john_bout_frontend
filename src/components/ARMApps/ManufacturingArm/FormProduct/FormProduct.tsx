@@ -168,7 +168,6 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                 layout="vertical"
                 className={ 'w-full' }
             >
-                <Divider>Создание товара</Divider>
                 <Row className={ 'mb-2' } gutter={ [10, 10] }>
                     <Col span={ 8 }>
                         <Form.Item

@@ -74,7 +74,7 @@ const ManufacturingArm = () => {
             messageUtility.showMessage({
                 key: 'CustomerARMGetCustomersError',
                 type: 'error',
-                content: 'Ошибка получения списка клиентов',
+                content: 'Ошибка получения списка товаров',
             });
         });
     };
@@ -105,7 +105,7 @@ const ManufacturingArm = () => {
     }, []);
 
     return (
-        <div className={ 'flex space-x-11' } style={ { width: '100%' } }>
+        <div className={ 'flex space-x-7' } style={ { width: '100%', height: '610px' } }>
             <Sider width={ 200 } style={ { background: colorBgContainer } }>
                 <Menu
                     onClick={ onClickMenu }
@@ -116,8 +116,10 @@ const ManufacturingArm = () => {
                 />
             </Sider>
 
-            { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
-            { currentMenuOptions === 1 && <FormProduct isCreate={ true }/> }
+            <div style={ { width: '100%', height: '610px', overflowY: 'scroll' } }>
+                { currentMenuOptions === 0 && <TableManufacturing tableData={ tableData }/> }
+                { currentMenuOptions === 1 && <FormProduct isCreate={ true }/> }
+            </div>
         </div>
     );
 };

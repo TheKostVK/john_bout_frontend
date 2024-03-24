@@ -52,7 +52,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }
-            scroll={ { x: 300, y: 300 } }
+            size={'small'}
             expandable={ {
                 expandedRowRender: (product: IProductTable) => {
                     return (

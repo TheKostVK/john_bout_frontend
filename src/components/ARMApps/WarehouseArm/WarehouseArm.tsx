@@ -1,67 +1,31 @@
-import { Layout, Menu, MenuProps, TableColumnsType, theme } from "antd";
+import { Layout, Menu, type MenuProps, theme } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLazyGetCustomersQuery } from "../../../services/customersService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { setCustomers } from "../../../store/reducers/customersSlice";
-import { ICustomer, IGetCustomersListResponse } from "../../../services/interface/ICustomersService";
 import messageUtility from "../../utility/messageUtility";
 import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
-import TableCustomers from "./TableCustomers/TableCustomers";
+import { useLazyGetWarehousesQuery } from "../../../services/warehouseService";
+import { IGetWarehousesResponse, IWarehouse } from "../../../services/interface/IWarehousesService";
+import { setWarehouses } from "../../../store/reducers/warehousesSlice";
+import TableWarehouses from "./TableWarehouses/TableWarehouses";
 
 const { Sider } = Layout;
 
-export interface ICustomerTable extends ICustomer {
+export interface IWarehouseTable extends IWarehouse {
     key: number;
 }
 
-const CustomerArm = () => {
+const WarehouseArm = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const { customers } = useSelector((state: RootState) => state.customerReducer);
+    const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
     const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
-    const [tableData, setTableData] = React.useState<ICustomerTable[]>([]);
+    const [tableData, setTableData] = useState<IWarehouseTable[]>([]);
 
-    const [getCustomers] = useLazyGetCustomersQuery();
+    const [getWarehouses] = useLazyGetWarehousesQuery();
 
     const dispatch = useDispatch();
-
-    /**
-     * Описание столбцов таблицы.
-     */
-    const columns: TableColumnsType<ICustomerTable> = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            width: 50,
-        },
-        {
-            title: 'Имя',
-            dataIndex: 'name',
-            width: 150,
-        },
-        {
-            title: 'Адрес',
-            dataIndex: 'address',
-            width: 150,
-        },
-        {
-            title: 'Контактная информация',
-            dataIndex: 'contact_info',
-            width: 150,
-        },
-        {
-            title: 'Тип',
-            dataIndex: 'type',
-            width: 150,
-        },
-        {
-            title: 'Валюта',
-            dataIndex: 'currency',
-            width: 50,
-        },
-    ];
 
     /**
      * Содержимое бокового меню.
@@ -70,12 +34,12 @@ const CustomerArm = () => {
         {
             key: `productList`,
             icon: <OrderedListOutlined/>,
-            label: `Список товаров`,
+            label: `Список складов`,
         },
         {
             key: `createProduct`,
             icon: <AppstoreAddOutlined/>,
-            label: `Создание товара`,
+            label: `Создание склада`,
         },
     ];
 
@@ -98,18 +62,18 @@ const CustomerArm = () => {
     /**
      * Получение списка клиентов.
      */
-    const handleGetCustomers = () => {
-        getCustomers()
+    const handleGetWarehouses = (): void => {
+        getWarehouses()
             .unwrap()
-            .then((customersResp: IGetCustomersListResponse) => {
-                dispatch(setCustomers(customersResp.data));
+            .then((warehousesResp: IGetWarehousesResponse): void => {
+                dispatch(setWarehouses(warehousesResp.data));
             }).catch((err) => {
             console.error(err);
 
             messageUtility.showMessage({
                 key: 'CustomerARMGetCustomersError',
                 type: 'error',
-                content: 'Ошибка получения списка клиентов',
+                content: 'Ошибка получения списка складов',
             });
         });
     };
@@ -117,26 +81,26 @@ const CustomerArm = () => {
     /**
      * Обновляет данные таблицы при изменении списка клиентов.
      */
-    useEffect(() => {
-        let data: ICustomerTable[] = [];
+    useEffect((): void => {
+        let data: IWarehouseTable[] = [];
 
-        customers.map((customer: ICustomer, index: number) => {
+        warehouses.map((warehouse: IWarehouse, index: number): void => {
             data.push({
                 key: index,
-                ...customer
+                ...warehouse
             });
         });
 
         setTableData(data);
-    }, [customers]);
+    }, [warehouses]);
 
     /**
      * Получение списка клиентов при первом открытии АРМа.
      */
-    useEffect(() => {
-        if (customers.length !== 0) return;
+    useEffect((): void => {
+        if (warehouses.length !== 0) return;
 
-        handleGetCustomers();
+        handleGetWarehouses();
     }, []);
 
     return (
@@ -152,11 +116,10 @@ const CustomerArm = () => {
             </Sider>
 
             <div style={ { width: '100%', height: '610px', overflowY: 'scroll' } }>
-                { currentMenuOptions === 0 && <TableCustomers tableData={ tableData }/> }
+                { currentMenuOptions === 0 && <TableWarehouses tableData={ tableData }/> }
             </div>
         </div>
-    )
-        ;
+    );
 };
 
-export default CustomerArm;
+export default WarehouseArm;

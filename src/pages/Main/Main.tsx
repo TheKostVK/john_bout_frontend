@@ -6,6 +6,7 @@ import { DEFAULT_MODULE, LS_KEYS, MODULES_ENUM } from "../../constants";
 import MainDashArm from "../../components/ARMApps/MainDashArm/MainDashArm";
 import CustomerArm from "../../components/ARMApps/CustomersArm/CustomerArm";
 import ManufacturingArm from "../../components/ARMApps/ManufacturingArm/ManufacturingArm";
+import WarehouseArm from "../../components/ARMApps/WarehouseArm/WarehouseArm";
 
 const { Content, Footer } = Layout;
 
@@ -50,22 +51,23 @@ const Main: React.FC = () => {
 
                 <Layout
                     style={ {
-                        minHeight: '70vh',
-                        padding: '24px 0',
+                        minHeight: '75vh',
+                        padding: '5px 0',
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG
                     } }
                 >
                     <div
-                        style={ { margin: '24px', minWidth: '96%' } }
+                        style={ { margin: '24px', minWidth: '95%' } }
                     >
                         { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
                         { moduleId === MODULES_ENUM.manufacturing && <ManufacturingArm/> }
+                        { moduleId === MODULES_ENUM.warehouse && <WarehouseArm/> }
                     </div>
                 </Layout>
             </Content>
-            <Footer style={ { textAlign: 'center', background: colorBgBase} }>
+            <Footer style={ { textAlign: 'center', background: colorBgBase } }>
                 УВЗ ©{ new Date().getFullYear() }
             </Footer>
         </Layout>

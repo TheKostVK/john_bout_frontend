@@ -27,6 +27,24 @@ export const LS_KEYS = {
 };
 
 /**
+ * Статусы контрактов
+ */
+export const contractStatus = [
+    {
+        text: 'Ожидает подтверждения',
+        value: 'pending_confirmation',
+    },
+    {
+        text: 'В процессе выполнения',
+        value: 'in_progress',
+    },
+    {
+        text: 'Выполнен',
+        value: 'completed',
+    },
+];
+
+/**
  * Типы и подтипы вооружения
  */
 export const typeToSubtypes: Record<string, string[]> = {

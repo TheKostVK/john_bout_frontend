@@ -4,12 +4,13 @@ import { IContractsTable } from "../ContractsArm";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { ICustomer } from "../../../../services/interface/ICustomersService";
+import { contractStatus } from "../../../../constants";
 
 
 const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
     const { customers } = useSelector((state: RootState) => state.customerReducer);
 
-    // TODO: сделать сортировку по статусу и типу контракта, а также по покупателю
+    // TODO: сделать фильтр по покупателю
     /**
      * Описание столбцов таблицы.
      */
@@ -31,8 +32,11 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
             width: 150,
         },
         {
-            title: 'Статус контракта',
+            title: 'Статус',
             dataIndex: 'contract_status',
+            key: 'contract_status',
+            filters: contractStatus,
+            onFilter: (value: any, record: IContractsTable) => record.contract_status === value,
             width: 150,
         },
         {

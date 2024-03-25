@@ -2,10 +2,13 @@ import { Menu, type MenuProps } from "antd";
 import React from "react";
 import { Layout } from 'antd';
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { LS_KEYS } from "../../constants";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const AppHeader = () => {
+    const currentModuleId: string = localStorage.getItem(LS_KEYS.moduleId) || '';
+
     const navigate: NavigateFunction = useNavigate();
 
     return (
@@ -15,7 +18,7 @@ const AppHeader = () => {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={ ['1'] }
+                defaultSelectedKeys={ [currentModuleId] }
                 items={[
                     {
                         key: 0,

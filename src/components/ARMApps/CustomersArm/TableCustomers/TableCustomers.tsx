@@ -43,6 +43,7 @@ const TableCustomers= ({ tableData }: { tableData: ICustomerTable[] }) => {
 
     return (
         <Table
+            bordered
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }

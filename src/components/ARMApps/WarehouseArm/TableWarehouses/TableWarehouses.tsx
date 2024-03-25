@@ -43,6 +43,7 @@ const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
 
     return (
         <Table
+            bordered
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }

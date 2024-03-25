@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, Row, Col, Divider } from "antd";
+import { Button, Form, Input, Select, Row, Col, InputNumber } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
+import { IWarehouse } from "../../../../services/interface/IWarehousesService";
+import { useCreateProductMutation } from "../../../../services/productsService";
+import { ICreateProductResponse, IProductCreate } from "../../../../services/interface/IProductsService";
+import messageUtility from "../../../utility/messageUtility";
+import { setProducts } from "../../../../store/reducers/productsSlice";
+import { typeToSubtypes } from "../../../../constants";
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 interface Characteristic {
     [key: string]: string;
@@ -29,125 +38,51 @@ interface Props {
  *     "Межконтинентальные ракеты": ["РС-24", "РС-26", "РС-28", "Р-36", "Р-36M", "РС-18", "РС-18B", "РС-18U", "РС-18У", "РС-20", "РС-20Б", "РС-20В", "РС-20ВЫ", "РС-20К", "РС-20КВ", "РС-20П", "РС-20ПВ", "РС-20Р", "РС-20РВ", "РС-20У", "РС-20УВ", "РС-22", "РС-22А", "РС-22Б", "РС-22Г", "РС-24", "РС-24А", "РС-24Б", "РС-24В", "РС-24Г", "РС-28", "РС-28А", "РС-28Б", "РС-28В", "РС-28Г"]
  */
 
-// Подтипы вооружений
-const typeToSubtypes: Record<string, string[]> = {
-    "Оружие": ["Тактические винтовки", "Штурмовые винтовки", "Пистолеты-пулеметы", "Пистолеты", "Ручные пулеметы", "Снайперские и пехотные винтовки"],
-    "Военные самолеты": [
-        "Истребители",
-        "Бомбардировщики",
-        "Разведчики",
-        "Транспортные самолеты",
-        "Беспилотные летательные аппараты (БПЛА)",
-        "Разведывательные вертолеты",
-        "Ударные вертолеты",
-        "Патрульные самолеты",
-        "Специальные самолеты (например, для борьбы с беспилотниками)",
-        "Учебно-тренировочные самолеты",
-        "Танкеры (для воздушной дозаправки)",
-        "Эвакуационные самолеты"
-    ],
-    "Тяжелая техника": [
-        "Ракетные комплексы",
-        "РСЗО",
-        "Бронетранспортеры",
-        "Танки",
-        "Бронеавтомобили",
-        "Самоходные артиллерийские установки",
-        "Тяжелые гаубицы",
-        "Тяжелые минометы",
-        "Разведывательные машины",
-        "Инженерная техника"
-    ],
-    "Амуниция": [
-        "Бронежилеты стандартного уровня защиты",
-        "Бронежилеты с улучшенной защитой",
-        "Бронежилеты с керамическими пластинами",
-        "Бронежилеты для общевойсковых подразделений",
-        "Бронежилеты для специальных операций (ССО)",
-        "Кевларовые бронежилеты",
-        "Тканевые бронежилеты",
-        "Летные бронежилеты для летного состава",
-        "Бронежилеты для бронетехники",
-        "Каски боевые стандартного уровня защиты",
-        "Каски боевые с улучшенной защитой",
-        "Каски боевые с интегрированными коммуникационными средствами",
-        "Каски боевые для общевойсковых подразделений",
-        "Каски боевые для специальных операций (ССО)",
-        "Каски боевые для танкистов",
-        "Каски боевые для пилотов",
-        "Каски боевые для десантников",
-        "Гранаты дымовые",
-        "Гранаты осколочные",
-        "Гранаты огнемётные",
-        "Гранаты штурмовые",
-        "Гранаты светозвуковые",
-        "Гранаты противотанковые",
-        "Гранаты реактивные",
-        "Гранаты ударные",
-        "Гранаты газовые",
-    ],
-    "Боеприпасы различного калибра": [
-        "Патроны калибра 5,45 мм",
-        "Патроны калибра 7,62 мм",
-        "Патроны калибра 12,7 мм",
-        "Патроны калибра 14,5 мм",
-        "Снаряды калибра 30 мм",
-        "Снаряды калибра 85 мм",
-        "Снаряды калибра 125 мм",
-        "Снаряды калибра 152 мм",
-        "Снаряды калибра 203 мм",
-        "Снаряды калибра 240 мм",
-        "Снаряды калибра 300 мм"
-    ],
-    "Ракеты класса воздух-земля": [
-        "Управляемые авиационные бомбы",
-        "Противокорабельные ракеты",
-        "Управляемые ракетные комплексы наземного базирования",
-        "Ракеты с ИК наведением",
-        "Ракеты с радиолокационным наведением",
-        "Ракеты с лазерным наведением",
-        "Ракеты с ТВ наведением",
-        "Ракеты с инерциальным наведением"
-    ],
-    "Ракеты класса воздух-воздух": [
-        "Ближнего радиуса действия с ИК наведением",
-        "Ближнего радиуса действия с радиолокационным наведением",
-        "Среднего радиуса действия с радиолокационным наведением",
-        "Дальнего радиуса действия с радиолокационным наведением",
-        "Ракеты с активной радиолокационной головкой",
-        "Ракеты с полуактивной радиолокационной головкой",
-        "Ракеты с тепловой головкой",
-        "Ракеты с радиоволновой головкой"
-    ],
-    "Ракеты класса земля-воздух": [
-        "Зенитные ракетные комплексы с головками самонаведения по радиолокационной разведке (ГСН)",
-        "Зенитные ракетные комплексы с головками самонаведения по радару",
-        "Зенитные ракетные комплексы с инфракрасными головками самонаведения",
-        "Зенитные ракетные комплексы с лазерными головками самонаведения",
-        "Переносные зенитные ракетные комплексы с радиолокационным наведением",
-        "Стрелково-пушечные зенитные комплексы с головками самонаведения по радару"
-    ],
-    "Межконтинентальные ракеты": [
-        "Баллистические ракеты с одной боеголовкой",
-        "Баллистические ракеты с множественными боеголовками",
-        "Маневрирующие баллистические ракеты",
-        "Баллистические ракеты с ядерным зарядом",
-        "Баллистические ракеты с термоядерным зарядом",
-        "Баллистические ракеты с конвенциональными боеприпасами",
-        "Баллистические ракеты с гиперзвуковыми боеголовками",
-        "Межконтинентальные ракеты-носители космических аппаратов",
-        "Баллистические ракеты с разделяющимися блоками"
-    ]
-};
-
 const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     const [form] = Form.useForm();
 
+    const { products } = useSelector((state: RootState) => state.productReducer);
+    const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
+
     const [selectedType, setSelectedType] = useState<string | undefined>(initialValues?.product_type);
     const [subtypes, setSubtypes] = useState<string[]>([]);
+    const [availableWarehouses, setAvailableWarehouses] = useState<IWarehouse[]>([]);
 
-    const onFinish = (values: any) => {
+    const [createProduct] = useCreateProductMutation();
 
+    const dispatch = useDispatch();
+
+    /**
+     * Обработчик создания товара.
+     */
+    const onFinish = (values: IProductCreate) => {
+        messageUtility.showMessage({
+            key: 'createProduct',
+            type: 'loading',
+            duration: 0,
+            content: 'Создание товара...'
+        });
+
+        createProduct(values).unwrap().then((response: ICreateProductResponse) => {
+            if (response.success) {
+
+                dispatch(setProducts([...products, response.data]));
+
+                messageUtility.showMessage({
+                    key: 'createProduct',
+                    type: 'success',
+                    content: 'Товар успешно создан'
+                });
+            }
+        }).catch((error) => {
+            messageUtility.showMessage({
+                key: 'createProduct',
+                type: 'error',
+                content: `Статус: ${ error.status }. Ошибка: ${ error.data.error }`
+            });
+        });
+
+        form.resetFields();
     };
 
     /**
@@ -157,7 +92,21 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
         setSelectedType(value);
         setSubtypes(typeToSubtypes[value] || []);
         form.setFieldsValue({ subtype: undefined });
+
+        // Фильтруем склады в соответствии с выбранным типом товара
+        const filteredWarehouses: IWarehouse[] = warehouses.filter((warehouse: IWarehouse) => {
+            if (value === 'Военные самолеты') {
+                return warehouse.warehouse_type === 'Авиационный ангар';
+            } else if (value === 'Тяжелая техника') {
+                return warehouse.warehouse_type === 'Ангар для техники';
+            } else {
+                return warehouse.warehouse_type === 'Обычный';
+            }
+        });
+
+        setAvailableWarehouses(filteredWarehouses);
     };
+
 
     return (
         <>
@@ -166,7 +115,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                 onFinish={ onFinish }
                 initialValues={ initialValues }
                 layout="vertical"
-                className={ 'w-full' }
+                style={ { width: '98%' } }
             >
                 <Row className={ 'mb-2' } gutter={ [10, 10] }>
                     <Col span={ 8 }>
@@ -193,12 +142,12 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     </Col>
                     <Col span={ 10 }>
                         <Form.Item
-                            name="subtype"
+                            name="product_subtype"
                             label="Подтип"
                             rules={ [{ required: true, message: 'Выберите подтип товара' }] }
                         >
                             <Select placeholder="Выберите подтип товара" disabled={ !selectedType }>
-                                { selectedType && typeToSubtypes[selectedType].map(subtype => (
+                                { selectedType && typeToSubtypes[selectedType].map((subtype: string) => (
                                     <Option key={ subtype } value={ subtype }>{ subtype }</Option>
                                 )) }
                             </Select>
@@ -219,13 +168,25 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                 </Row>
 
                 <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 24 }>
+                        <Form.Item
+                            name="product_description"
+                            label="Описание товара"
+                            rules={ [{ required: true, message: 'Введите описание товара' }] }
+                        >
+                            <TextArea rows={4} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
                     <Col span={ 8 }>
                         <Form.Item
                             name="quantity"
                             label="Количество товара на складе"
                             rules={ [{ required: true, message: 'Введите количество товара' }] }
                         >
-                            <Input type="number" placeholder="Количество товара"/>
+                            <Input type="number" placeholder="Количество товара" suffix={ 'шт.' }/>
                         </Form.Item>
                     </Col>
                     <Col span={ 8 }>
@@ -243,7 +204,12 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                             label="Склад хранения товара"
                             rules={ [{ required: true, message: 'Введите номер склада для хранения товара' }] }
                         >
-                            <Input type="number" placeholder="Номер склада"/>
+                            <Select placeholder={ 'Выберите склад' } disabled={ !selectedType || !subtypes }>
+                                { availableWarehouses.map((warehouse: IWarehouse) => (
+                                    <Option key={ `warehouse-${ warehouse.id }` }
+                                            value={ warehouse.id }>{ warehouse.name }</Option>
+                                )) }
+                            </Select>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -254,8 +220,22 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                             name="production_cost"
                             label="Стоимость производства одной единицы товара"
                             rules={ [{ required: true, message: 'Введите стоимость производства' }] }
+                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                            normalize={ (value) => (value === '0.00' ? undefined : value) }
                         >
-                            <Input type="number" placeholder="Стоимость производства"/>
+                            <InputNumber
+                                style={ { width: '100%' } }
+                                placeholder="Стоимость производства"
+                                formatter={ (value: any) => (
+                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                                ) }
+                                min={ '0.00' }
+                                defaultValue={ '0.00' }
+                                step={ 0.01 }
+                                precision={ 2 }
+                                prefix={ '₽' }
+                                suffix={ 'руб.' }
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={ 8 }>
@@ -263,8 +243,22 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                             name="price"
                             label="Стоимость продажи одной единицы товара"
                             rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
+                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                            normalize={ (value) => (value === '0.00' ? undefined : value) }
                         >
-                            <Input type="number" placeholder="Стоимость продажи"/>
+                            <InputNumber
+                                style={ { width: '100%' } }
+                                placeholder="Стоимость продажи"
+                                formatter={ (value: any) => (
+                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                                ) }
+                                min={ '0.00' }
+                                defaultValue={ '0.00' }
+                                step={ 0.01 }
+                                precision={ 2 }
+                                prefix={ '₽' }
+                                suffix={ 'руб.' }
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={ 8 }>
@@ -284,7 +278,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                                         { ...restField }
                                         key={ fieldKey?.toString() }
                                     >
-                                        <Row gutter={ 8 }>
+                                        <Row gutter={ [10, 10] }>
                                             <Col span={ 10 }>
                                                 <Form.Item
                                                     name={ [name, 'name'] }
@@ -310,21 +304,25 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                                     </Form.Item>
                                 )) }
                                 <Form.Item>
-                                    <Button
-                                        type="dashed"
-                                        onClick={ () => add() }
-                                        icon={ <PlusOutlined/> }
-                                        disabled={ subtypes.length === 0 }
-                                    >
-                                        Добавить характеристику
-                                    </Button>
+                                    <Row gutter={ [10, 10] }>
+                                        <Col span={ 3 }>
+                                            <Button
+                                                type="dashed"
+                                                onClick={ () => add() }
+                                                icon={ <PlusOutlined/> }
+                                                disabled={ subtypes.length === 0 }
+                                            >
+                                                Добавить характеристику
+                                            </Button>
+                                        </Col>
+                                    </Row>
                                 </Form.Item>
                             </>
                         ) }
                     </Form.List>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button htmlType="submit">
                         Создать товар
                     </Button>
                 </Form.Item>

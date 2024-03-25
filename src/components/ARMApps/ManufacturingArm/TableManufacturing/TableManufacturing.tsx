@@ -2,9 +2,36 @@ import RowCard from "./RowCard/RowCard";
 import { Table, TableColumnsType } from "antd";
 import React from "react";
 import { IProductTable } from "../ManufacturingArm";
+import { typeToSubtypes } from "../../../../constants";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
+import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 
 
 const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
+    const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
+
+    /**
+     * Создаем массив объектов фильтров для типов
+     */
+    const typeFilters = Object.keys(typeToSubtypes).map((type: string) => ({
+        text: type,
+        value: type,
+    }));
+
+    /**
+     * Создаем массив объектов фильтров для подтипов
+     */
+    const subTypeFilters = Object.keys(typeToSubtypes).map((type: string) => (
+        {
+            text: type,
+            value: type,
+            children: typeToSubtypes[type].map((subtype: string) => ({
+                text: subtype,
+                value: subtype
+            }))
+        }
+    ));
 
     /**
      * Описание столбцов таблицы.
@@ -23,6 +50,16 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'Тип',
             dataIndex: 'product_type',
+            filters: typeFilters,
+            onFilter: (value: any, record: IProductTable) => record.product_type === value,
+            width: 150,
+        },
+        {
+            title: 'Подтип',
+            dataIndex: 'product_subtype',
+            filters: subTypeFilters.flatMap(type => type.children), // Используем подтипы в фильтрах
+            filterSearch: true,
+            onFilter: (value: any, record: IProductTable) => record.product_subtype === value,
             width: 150,
         },
         {
@@ -38,6 +75,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'Склад',
             dataIndex: 'storage_location',
+            render: (storage_location: string) => warehouses.find((warehouse: IWarehouse) => warehouse.id === Number(storage_location))?.name || 'Неизвестно',
             width: 150,
         },
         {
@@ -49,10 +87,11 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
 
     return (
         <Table
+            bordered
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }
-            size={'small'}
+            size={ 'small' }
             expandable={ {
                 expandedRowRender: (product: IProductTable) => {
                     return (

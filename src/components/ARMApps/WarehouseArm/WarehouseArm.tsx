@@ -20,6 +20,7 @@ const WarehouseArm = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
+
     const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
     const [tableData, setTableData] = useState<IWarehouseTable[]>([]);
 
@@ -115,7 +116,7 @@ const WarehouseArm = () => {
                 />
             </Sider>
 
-            <div style={ { width: '100%', height: '610px', overflowY: 'scroll' } }>
+            <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
                 { currentMenuOptions === 0 && <TableWarehouses tableData={ tableData }/> }
             </div>
         </div>

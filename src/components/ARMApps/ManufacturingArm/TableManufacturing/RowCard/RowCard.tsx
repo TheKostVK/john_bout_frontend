@@ -1,8 +1,8 @@
-import { Card, Col, Image, Row, Typography } from "antd";
+import { Card, Col, Divider, Image, Row, Typography } from "antd";
 import React from "react";
 import { IProductTable } from "../../ManufacturingArm";
 
-const { Title } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 /**
  * Карточка с информацией о товаре
@@ -12,29 +12,37 @@ const RowCard = ({ product }: { product: IProductTable }) => {
 
     return (
         <Card title={ product.name } bordered={ false }>
-            <Row className={ 'mb-5' } gutter={ [16, 16] }>
-                <Col span={ 6 }>
-                    <div>
-                        <p>Тип</p>
-                        <Title level={ 4 }>{ product.product_type }</Title>
-                    </div>
-                    <div>
-                        <p>Подтип</p>
-                        <Title level={ 4 }>{ product.subtype }</Title>
-                    </div>
-                </Col>
-                <Col span={ 10 }>
-                </Col>
-                <Col span={ 8 }>
-                    <Card title="Изображение товара">
-                        <Image
-                            width={ 250 }
-                            src={ product.image_url }
-                            preview={ false }
-                            alt={ 'Нет изображения' }
-                        />
+            <Row gutter={ [10, 10] }>
+                <Col span={ 24 }>
+                    <Card title="Изображение товара и краткое описание">
+                        <div className="flex justify-center">
+                            <Image
+                                width={ 250 }
+                                src={ product.image_url }
+                                preview={ false }
+                                alt={ 'Нет изображения' }
+                                className="w-full max-w-xs"
+                            />
+                        </div>
+                        <Paragraph className="text-gray-700 text-justify">
+                            { product.product_description }
+                        </Paragraph>
                     </Card>
                 </Col>
+
+                <Col span={ 8 }>
+                    <p>Тип</p>
+                    <Title level={ 4 }>{ product.product_type }</Title>
+                </Col>
+                <Col span={ 8 }>
+                    <p>Подтип</p>
+                    <Title level={ 4 }>{ product.product_subtype }</Title>
+                </Col>
+                <Col span={ 8 }>
+
+                </Col>
+
+                <Divider/>
 
                 <Col span={ 6 }>
                     <Title level={ 4 }>Характеристики</Title>
@@ -44,17 +52,19 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                 <Col span={ 8 }>
                 </Col>
                 {
-                    Object.entries(product.characteristics).map(([key, value]) => (
+                    Object.entries(product.characteristics).map(([key, characteristic]) => (
                         <Col span={ 6 } key={ key }>
                             <div>
-                                <p>{ key }</p>
-                                <Title level={ 5 }>{ value }</Title>
+                                <p>{ characteristic.name }</p>
+                                <Title level={ 5 }>{ characteristic.value }</Title>
                             </div>
                         </Col>
                     ))
                 }
             </Row>
-            <Row className={ 'mb-5' } gutter={ [16, 16] }>
+
+            <Divider/>
+            <Row gutter={ [16, 16] }>
                 <Col span={ 6 }>
                     <Title level={ 4 }>Производство и склад</Title>
                 </Col>

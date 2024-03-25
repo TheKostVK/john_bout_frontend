@@ -20,6 +20,7 @@ const CustomerArm = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const { customers } = useSelector((state: RootState) => state.customerReducer);
+
     const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
     const [tableData, setTableData] = React.useState<ICustomerTable[]>([]);
 
@@ -28,54 +29,13 @@ const CustomerArm = () => {
     const dispatch = useDispatch();
 
     /**
-     * Описание столбцов таблицы.
-     */
-    const columns: TableColumnsType<ICustomerTable> = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            width: 50,
-        },
-        {
-            title: 'Имя',
-            dataIndex: 'name',
-            width: 150,
-        },
-        {
-            title: 'Адрес',
-            dataIndex: 'address',
-            width: 150,
-        },
-        {
-            title: 'Контактная информация',
-            dataIndex: 'contact_info',
-            width: 150,
-        },
-        {
-            title: 'Тип',
-            dataIndex: 'type',
-            width: 150,
-        },
-        {
-            title: 'Валюта',
-            dataIndex: 'currency',
-            width: 50,
-        },
-    ];
-
-    /**
      * Содержимое бокового меню.
      */
     const menuItems: MenuProps['items'] = [
         {
-            key: `productList`,
+            key: `customersList`,
             icon: <OrderedListOutlined/>,
-            label: `Список товаров`,
-        },
-        {
-            key: `createProduct`,
-            icon: <AppstoreAddOutlined/>,
-            label: `Создание товара`,
+            label: `Список клиентов`,
         },
     ];
 
@@ -145,13 +105,13 @@ const CustomerArm = () => {
                 <Menu
                     onClick={ onClickMenu }
                     mode="inline"
-                    defaultSelectedKeys={ [`productList`] }
+                    defaultSelectedKeys={ [`customersList`] }
                     style={ { borderRight: 0 } }
                     items={ menuItems }
                 />
             </Sider>
 
-            <div style={ { width: '100%', height: '610px', overflowY: 'scroll' } }>
+            <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
                 { currentMenuOptions === 0 && <TableCustomers tableData={ tableData }/> }
             </div>
         </div>

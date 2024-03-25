@@ -3,6 +3,7 @@ import reducers from "./reducers";
 import { productService } from "../services/productsService";
 import { customersService } from "../services/customersService";
 import { warehouseService } from "../services/warehouseService";
+import { contractsService } from "../services/contractsService";
 
 const rootReducer = combineReducers(reducers);
 
@@ -14,7 +15,8 @@ export const setupStore = () => {
                 .concat(
                     productService.middleware,
                     customersService.middleware,
-                    warehouseService.middleware
+                    warehouseService.middleware,
+                    contractsService.middleware
                 )
     })
 }

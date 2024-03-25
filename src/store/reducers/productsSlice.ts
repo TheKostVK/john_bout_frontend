@@ -15,7 +15,7 @@ export const productsSlice = createSlice({
     initialState: initialState,
     reducers: {
         /**
-         * Хранит товары.
+         * Сохраняет товары.
          */
         setProducts: (state, action: PayloadAction<IProduct[]>): void => {
             state.products = action.payload;

@@ -15,7 +15,7 @@ export const customersSlice = createSlice({
     initialState: initialState,
     reducers: {
         /**
-         * Хранит покупателей.
+         * Сохраняет покупателей.
          */
         setCustomers: (state, action: PayloadAction<ICustomer[]>): void => {
             state.customers = action.payload;

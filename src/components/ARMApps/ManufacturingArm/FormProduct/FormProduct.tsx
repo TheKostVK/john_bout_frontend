@@ -214,58 +214,6 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     </Col>
                 </Row>
 
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="production_cost"
-                            label="Стоимость производства одной единицы товара"
-                            rules={ [{ required: true, message: 'Введите стоимость производства' }] }
-                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
-                            normalize={ (value) => (value === '0.00' ? undefined : value) }
-                        >
-                            <InputNumber
-                                style={ { width: '100%' } }
-                                placeholder="Стоимость производства"
-                                formatter={ (value: any) => (
-                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
-                                ) }
-                                min={ '0.00' }
-                                defaultValue={ '0.00' }
-                                step={ 0.01 }
-                                precision={ 2 }
-                                prefix={ '₽' }
-                                suffix={ 'руб.' }
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="price"
-                            label="Стоимость продажи одной единицы товара"
-                            rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
-                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
-                            normalize={ (value) => (value === '0.00' ? undefined : value) }
-                        >
-                            <InputNumber
-                                style={ { width: '100%' } }
-                                placeholder="Стоимость продажи"
-                                formatter={ (value: any) => (
-                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
-                                ) }
-                                min={ '0.00' }
-                                defaultValue={ '0.00' }
-                                step={ 0.01 }
-                                precision={ 2 }
-                                prefix={ '₽' }
-                                suffix={ 'руб.' }
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
-
-                    </Col>
-                </Row>
-
                 <Form.Item
                     name="characteristics"
                     label="Характеристики"
@@ -321,6 +269,59 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         ) }
                     </Form.List>
                 </Form.Item>
+
+                <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="production_cost"
+                            label="Стоимость производства одной единицы товара"
+                            rules={ [{ required: true, message: 'Введите стоимость производства' }] }
+                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                            normalize={ (value) => (value === '0.00' ? undefined : value) }
+                        >
+                            <InputNumber
+                                style={ { width: '100%' } }
+                                placeholder="Стоимость производства"
+                                formatter={ (value: any) => (
+                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                                ) }
+                                min={ '0.00' }
+                                defaultValue={ '0.00' }
+                                step={ 0.01 }
+                                precision={ 2 }
+                                prefix={ '₽' }
+                                suffix={ 'руб.' }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+                        <Form.Item
+                            name="price"
+                            label="Стоимость продажи одной единицы товара"
+                            rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
+                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                            normalize={ (value) => (value === '0.00' ? undefined : value) }
+                        >
+                            <InputNumber
+                                style={ { width: '100%' } }
+                                placeholder="Стоимость продажи"
+                                formatter={ (value: any) => (
+                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                                ) }
+                                min={ '0.00' }
+                                defaultValue={ '0.00' }
+                                step={ 0.01 }
+                                precision={ 2 }
+                                prefix={ '₽' }
+                                suffix={ 'руб.' }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+
+                    </Col>
+                </Row>
+
                 <Form.Item>
                     <Button htmlType="submit">
                         Создать товар

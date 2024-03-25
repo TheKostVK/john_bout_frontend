@@ -15,6 +15,9 @@ export interface IWarehouseTable extends IWarehouse {
     key: number;
 }
 
+/**
+ * АРМ для работы со складами
+ */
 const WarehouseArm = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -33,12 +36,12 @@ const WarehouseArm = () => {
      */
     const menuItems: MenuProps['items'] = [
         {
-            key: `productList`,
+            key: `warehousesList`,
             icon: <OrderedListOutlined/>,
             label: `Список складов`,
         },
         {
-            key: `createProduct`,
+            key: `createWarehouse`,
             icon: <AppstoreAddOutlined/>,
             label: `Создание склада`,
         },
@@ -49,10 +52,10 @@ const WarehouseArm = () => {
      */
     const onClickMenu: MenuProps['onClick'] = (e): void => {
         switch (e.key) {
-            case `productList`:
+            case `warehousesList`:
                 setCurrentMenuOptions(0);
                 break;
-            case `createProduct`:
+            case `createWarehouse`:
                 setCurrentMenuOptions(1);
                 break;
             default:
@@ -61,7 +64,7 @@ const WarehouseArm = () => {
     };
 
     /**
-     * Получение списка клиентов.
+     * Получение списка складов.
      */
     const handleGetWarehouses = (): void => {
         getWarehouses()
@@ -72,7 +75,7 @@ const WarehouseArm = () => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomerARMGetCustomersError',
+                key: 'WarehousesARMGetWarehousesError',
                 type: 'error',
                 content: 'Ошибка получения списка складов',
             });
@@ -80,7 +83,7 @@ const WarehouseArm = () => {
     };
 
     /**
-     * Обновляет данные таблицы при изменении списка клиентов.
+     * Обновляет данные таблицы при изменении списка складов.
      */
     useEffect((): void => {
         let data: IWarehouseTable[] = [];
@@ -96,7 +99,7 @@ const WarehouseArm = () => {
     }, [warehouses]);
 
     /**
-     * Получение списка клиентов при первом открытии АРМа.
+     * Получение списка складов при первом открытии АРМа.
      */
     useEffect((): void => {
         if (warehouses.length !== 0) return;
@@ -110,7 +113,7 @@ const WarehouseArm = () => {
                 <Menu
                     onClick={ onClickMenu }
                     mode="inline"
-                    defaultSelectedKeys={ [`productList`] }
+                    defaultSelectedKeys={ [`warehousesList`] }
                     style={ { borderRight: 0 } }
                     items={ menuItems }
                 />

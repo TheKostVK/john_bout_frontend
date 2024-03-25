@@ -21,7 +21,7 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                                 src={ product.image_url }
                                 preview={ false }
                                 alt={ 'Нет изображения' }
-                                className="w-full max-w-xs"
+                                className="w-full max-w-xs mb-5"
                             />
                         </div>
                         <Paragraph className="text-gray-700 text-justify">

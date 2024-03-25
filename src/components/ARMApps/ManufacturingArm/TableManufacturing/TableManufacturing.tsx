@@ -75,7 +75,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'Склад',
             dataIndex: 'storage_location',
-            render: (storage_location: string) => warehouses.find((warehouse: IWarehouse) => warehouse.id === Number(storage_location))?.name || 'Неизвестно',
+            render: (storage_location: string) => warehouses.find((warehouse: IWarehouse) => warehouse.id === Number(storage_location))?.name || storage_location,
             width: 150,
         },
         {

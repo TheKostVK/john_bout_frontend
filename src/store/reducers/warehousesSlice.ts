@@ -15,7 +15,7 @@ export const warehousesSlice = createSlice({
     initialState: initialState,
     reducers: {
         /**
-         * Хранит склады.
+         * Сохраняет склады.
          */
         setWarehouses: (state, action: PayloadAction<IWarehouse[]>): void => {
             state.warehouses = action.payload;

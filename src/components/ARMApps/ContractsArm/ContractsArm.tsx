@@ -1,33 +1,34 @@
-import { Layout, Menu, MenuProps, TableColumnsType, theme } from "antd";
+import { Layout, Menu, MenuProps, theme } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLazyGetCustomersQuery } from "../../../services/customersService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { setCustomers } from "../../../store/reducers/customersSlice";
-import { ICustomer, IGetCustomersListResponse } from "../../../services/interface/ICustomersService";
 import messageUtility from "../../utility/messageUtility";
 import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
-import TableCustomers from "./TableCustomers/TableCustomers";
+import TableContracts from "./TableContracts/TableContracts";
+import { IContract, IGetContractsResponse } from "../../../services/interface/IContractsService";
+import { useLazyGetContractsQuery } from "../../../services/contractsService";
+import { setContracts } from "../../../store/reducers/contractsSlice";
 
 const { Sider } = Layout;
 
-export interface ICustomerTable extends ICustomer {
+export interface IContractsTable extends IContract {
     key: number;
 }
 
 /**
- * АРМ для работы с покупателями
+ * АРМ для работы с контрактами
  */
-const CustomerArm = () => {
+const ContractsArm = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const { customers } = useSelector((state: RootState) => state.customerReducer);
+    const { contracts } = useSelector((state: RootState) => state.contractsReducer);
 
     const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
-    const [tableData, setTableData] = React.useState<ICustomerTable[]>([]);
+    const [tableData, setTableData] = React.useState<IContractsTable[]>([]);
 
-    const [getCustomers] = useLazyGetCustomersQuery();
+    const [getContracts] = useLazyGetContractsQuery();
 
     const dispatch = useDispatch();
 
@@ -36,9 +37,9 @@ const CustomerArm = () => {
      */
     const menuItems: MenuProps['items'] = [
         {
-            key: `customersList`,
+            key: `contractsList`,
             icon: <OrderedListOutlined/>,
-            label: `Список клиентов`,
+            label: `Список контрактов`,
         },
     ];
 
@@ -47,7 +48,7 @@ const CustomerArm = () => {
      */
     const onClickMenu: MenuProps['onClick'] = (e): void => {
         switch (e.key) {
-            case `customersList`:
+            case `contractsList`:
                 setCurrentMenuOptions(0);
                 break;
             default:
@@ -56,47 +57,47 @@ const CustomerArm = () => {
     };
 
     /**
-     * Получение списка клиентов.
+     * Получение списка контрактов.
      */
-    const handleGetCustomers = () => {
-        getCustomers()
+    const handleGetContracts = () => {
+        getContracts()
             .unwrap()
-            .then((customersResp: IGetCustomersListResponse) => {
-                dispatch(setCustomers(customersResp.data));
+            .then((contractsResp: IGetContractsResponse) => {
+                dispatch(setContracts(contractsResp.data));
             }).catch((err) => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomersARMGetCustomersError',
+                key: 'ContractsARMGetContractsError',
                 type: 'error',
-                content: 'Ошибка получения списка клиентов',
+                content: 'Ошибка получения списка контрактов',
             });
         });
     };
 
     /**
-     * Обновляет данные таблицы при изменении списка клиентов.
+     * Обновляет данные таблицы при изменении списка контрактов.
      */
     useEffect(() => {
-        let data: ICustomerTable[] = [];
+        let data: IContractsTable[] = [];
 
-        customers.map((customer: ICustomer, index: number) => {
+        contracts.map((contract: IContract, index: number) => {
             data.push({
                 key: index,
-                ...customer
+                ...contract
             });
         });
 
         setTableData(data);
-    }, [customers]);
+    }, [contracts]);
 
     /**
-     * Получение списка клиентов при первом открытии АРМа.
+     * Получение списка контрактов при первом открытии АРМа.
      */
     useEffect(() => {
-        if (customers.length !== 0) return;
+        if (contracts.length !== 0) return;
 
-        handleGetCustomers();
+        handleGetContracts();
     }, []);
 
     return (
@@ -105,18 +106,18 @@ const CustomerArm = () => {
                 <Menu
                     onClick={ onClickMenu }
                     mode="inline"
-                    defaultSelectedKeys={ [`customersList`] }
+                    defaultSelectedKeys={ [`contractsList`] }
                     style={ { borderRight: 0 } }
                     items={ menuItems }
                 />
             </Sider>
 
             <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
-                { currentMenuOptions === 0 && <TableCustomers tableData={ tableData }/> }
+                { currentMenuOptions === 0 && <TableContracts tableData={ tableData }/> }
             </div>
         </div>
     )
         ;
 };
 
-export default CustomerArm;
+export default ContractsArm;

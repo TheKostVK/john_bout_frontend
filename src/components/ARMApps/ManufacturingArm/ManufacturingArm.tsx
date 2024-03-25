@@ -16,6 +16,9 @@ export interface IProductTable extends IProduct {
     key: number;
 }
 
+/**
+ * АРМ для работы с товарами
+ */
 const ManufacturingArm = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -62,7 +65,7 @@ const ManufacturingArm = () => {
     };
 
     /**
-     * Получение списка клиентов.
+     * Получение списка товаров.
      */
     const handleGetProducts = (): void => {
         getProducts()
@@ -73,7 +76,7 @@ const ManufacturingArm = () => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomerARMGetCustomersError',
+                key: 'ProductsARMGetProductsError',
                 type: 'error',
                 content: 'Ошибка получения списка товаров',
             });
@@ -81,7 +84,7 @@ const ManufacturingArm = () => {
     };
 
     /**
-     * Обновляет данные таблицы при изменении списка клиентов.
+     * Обновляет данные таблицы при изменении списка товаров.
      */
     useEffect((): void => {
         let data: IProductTable[] = [];
@@ -97,7 +100,7 @@ const ManufacturingArm = () => {
     }, [products]);
 
     /**
-     * Получение списка клиентов при первом открытии АРМа.
+     * Получение списка товаров при первом открытии АРМа.
      */
     useEffect((): void => {
         if (products.length !== 0) return;

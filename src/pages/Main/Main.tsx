@@ -18,6 +18,10 @@ import { IGetProductsListResponse } from "../../services/interface/IProductsServ
 import { useLazyGetCustomersQuery } from "../../services/customersService";
 import { setCustomers } from "../../store/reducers/customersSlice";
 import { IGetCustomersListResponse } from "../../services/interface/ICustomersService";
+import ContractsArm from "../../components/ARMApps/ContractsArm/ContractsArm";
+import { setContracts } from "../../store/reducers/contractsSlice";
+import { useLazyGetContractsQuery } from "../../services/contractsService";
+import { IGetContractsResponse } from "../../services/interface/IContractsService";
 
 const { Content, Footer } = Layout;
 
@@ -31,6 +35,7 @@ const Main: React.FC = () => {
 
     const [moduleId, setModuleId] = useState<number>(Number(localStorage.getItem(LS_KEYS.moduleId)) || DEFAULT_MODULE);
 
+    const [getContracts] = useLazyGetContractsQuery();
     const [getWarehouses] = useLazyGetWarehousesQuery();
     const [getProducts] = useLazyGetProductsQuery();
     const [getCustomers] = useLazyGetCustomersQuery();
@@ -49,7 +54,7 @@ const Main: React.FC = () => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomerARMGetCustomersError',
+                key: 'CustomersARMGetCustomersError',
                 type: 'error',
                 content: 'Ошибка получения списка клиентов',
             });
@@ -57,7 +62,7 @@ const Main: React.FC = () => {
     };
 
     /**
-     * Получение списка клиентов.
+     * Получение списка товаров.
      */
     const handleGetProducts = (): void => {
         getProducts()
@@ -68,7 +73,7 @@ const Main: React.FC = () => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomerARMGetCustomersError',
+                key: 'ProductsARMGetProductsError',
                 type: 'error',
                 content: 'Ошибка получения списка товаров',
             });
@@ -76,7 +81,7 @@ const Main: React.FC = () => {
     };
 
     /**
-     * Получение списка клиентов.
+     * Получение списка складов.
      */
     const handleGetWarehouses = (): void => {
         getWarehouses()
@@ -87,9 +92,28 @@ const Main: React.FC = () => {
             console.error(err);
 
             messageUtility.showMessage({
-                key: 'CustomerARMGetCustomersError',
+                key: 'WarehousesARMGetWarehousesError',
                 type: 'error',
                 content: 'Ошибка получения списка складов',
+            });
+        });
+    };
+
+    /**
+     * Получение списка контрактов.
+     */
+    const handleGetContracts = () => {
+        getContracts()
+            .unwrap()
+            .then((contractsResp: IGetContractsResponse) => {
+                dispatch(setContracts(contractsResp.data));
+            }).catch((err) => {
+            console.error(err);
+
+            messageUtility.showMessage({
+                key: 'ContractsARMGetContractsError',
+                type: 'error',
+                content: 'Ошибка получения списка контрактов',
             });
         });
     };
@@ -101,6 +125,7 @@ const Main: React.FC = () => {
         handleGetCustomers();
         handleGetProducts();
         handleGetWarehouses();
+        handleGetContracts();
     }, []);
 
     /**
@@ -143,6 +168,7 @@ const Main: React.FC = () => {
                         { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
                         { moduleId === MODULES_ENUM.manufacturing && <ManufacturingArm/> }
                         { moduleId === MODULES_ENUM.warehouse && <WarehouseArm/> }
+                        { moduleId === MODULES_ENUM.contracts && <ContractsArm/> }
                     </div>
                 </Layout>
             </Content>

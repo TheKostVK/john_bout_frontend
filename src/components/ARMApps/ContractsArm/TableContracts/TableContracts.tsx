@@ -6,7 +6,7 @@ import { RootState } from "../../../../store/store";
 import { ICustomer } from "../../../../services/interface/ICustomersService";
 
 
-const TableCustomers= ({ tableData }: { tableData: IContractsTable[] }) => {
+const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
     const { customers } = useSelector((state: RootState) => state.customerReducer);
 
     // TODO: сделать сортировку по статусу и типу контракта, а также по покупателю
@@ -44,6 +44,7 @@ const TableCustomers= ({ tableData }: { tableData: IContractsTable[] }) => {
         {
             title: 'Сумма контракта',
             dataIndex: 'contract_amount',
+            render: (contract_amount: string) => `${Number(contract_amount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽`,
             width: 120,
         },
         {
@@ -59,7 +60,7 @@ const TableCustomers= ({ tableData }: { tableData: IContractsTable[] }) => {
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }
-            size={'small'}
+            size={ 'small' }
         />
     );
 };

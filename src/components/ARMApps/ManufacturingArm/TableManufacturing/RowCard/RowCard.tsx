@@ -76,11 +76,16 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                 <Col span={ 6 }>
                     <div>
                         <p>Стоимость одной единицы товара</p>
-                        <Title level={ 4 }>{ product.price } руб.</Title>
+                        <Title level={ 4 }>{ Number(product.price).toLocaleString('ru-RU', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) } руб.</Title>
                     </div>
-                    <div>
-                        <p>Стоимость производства одной единицы товара</p>
-                        <Title level={ 4 }>{ product.production_cost } руб.</Title>
+                    <div><p>Стоимость производства одной единицы товара</p>
+                        <Title level={ 4 }>{ Number(product.production_cost).toLocaleString('ru-RU', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) } руб.</Title>
                     </div>
                 </Col>
                 <Col span={ 10 }>

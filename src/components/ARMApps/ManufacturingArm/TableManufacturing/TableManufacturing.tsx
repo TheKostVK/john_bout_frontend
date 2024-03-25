@@ -81,6 +81,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'Цена за единицу',
             dataIndex: 'price',
+            render: (price: string) => `${Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽`,
             width: 150,
         },
     ];

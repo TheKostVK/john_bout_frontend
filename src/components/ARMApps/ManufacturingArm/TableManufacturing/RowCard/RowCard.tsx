@@ -1,6 +1,9 @@
 import { Card, Col, Divider, Image, Row, Typography } from "antd";
 import React from "react";
 import { IProductTable } from "../../ManufacturingArm";
+import { IWarehouse } from "../../../../../services/interface/IWarehousesService";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../store/store";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -9,6 +12,7 @@ const { Title, Text, Paragraph } = Typography;
  * @param product - товар для отображения
  */
 const RowCard = ({ product }: { product: IProductTable }) => {
+    const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
 
     return (
         <Card title={ product.name } bordered={ false }>
@@ -91,21 +95,23 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                 <Col span={ 10 }>
                     <div>
                         <p>Место хранения</p>
-                        <Title level={ 4 }>{ product.storage_location }</Title>
+                        <Title level={ 4 }>{
+                            warehouses.find((warehouse: IWarehouse) => warehouse.id === Number(product.storage_location))?.name || product.storage_location
+                        }</Title>
                     </div>
                     <div>
                         <p>Занимаемое место одной единицей товара</p>
-                        <Title level={ 4 }>{ product.occupied_space }</Title>
+                        <Title level={ 4 }>{ product.occupied_space } поз.</Title>
                     </div>
                 </Col>
                 <Col span={ 6 }>
                     <div>
                         <p>Количество товара на складе</p>
-                        <Title level={ 4 }>{ product.quantity }</Title>
+                        <Title level={ 4 }>{ product.quantity } шт.</Title>
                     </div>
                     <div>
                         <p>Зарезервировано</p>
-                        <Title level={ 4 }>{ product.reserved_quantity }</Title>
+                        <Title level={ 4 }>{ product.reserved_quantity } шт.</Title>
                     </div>
                 </Col>
             </Row>

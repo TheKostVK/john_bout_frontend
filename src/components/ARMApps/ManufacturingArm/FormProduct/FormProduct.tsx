@@ -53,6 +53,22 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     const dispatch = useDispatch();
 
     /**
+     * Проверка на корректность ссылки
+     * @param _
+     * @param value - строка для проверки
+     */
+    const validateURL = (_: any, value: string) => {
+        if (!value) {
+            return Promise.reject('Введите URL изображения товара');
+        }
+        const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+        if (!urlRegex.test(value)) {
+            return Promise.reject('Введите корректный URL изображения товара');
+        }
+        return Promise.resolve();
+    };
+
+    /**
      * Обработчик создания товара.
      */
     const onFinish = (values: IProductCreate) => {
@@ -160,7 +176,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         <Form.Item
                             name="imgUrl"
                             label="URL изображения товара"
-                            rules={ [{ required: true, message: 'Введите URL изображения товара' }] }
+                            rules={[{ validator: validateURL }]}
                         >
                             <Input placeholder="URL изображения товара"/>
                         </Form.Item>
@@ -195,7 +211,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                             label="Занимаемое место товаром"
                             rules={ [{ required: true, message: 'Введите занимаемое место товаром' }] }
                         >
-                            <Input type="number" placeholder="Занимаемое место"/>
+                            <Input type="number" placeholder="Занимаемое место" suffix={ 'поз.' }/>
                         </Form.Item>
                     </Col>
                     <Col span={ 8 }>
@@ -206,8 +222,9 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         >
                             <Select placeholder={ 'Выберите склад' } disabled={ !selectedType || !subtypes }>
                                 { availableWarehouses.map((warehouse: IWarehouse) => (
-                                    <Option key={ `warehouse-${ warehouse.id }` }
-                                            value={ warehouse.id }>{ warehouse.name }</Option>
+                                    <Option key={ `warehouse-${ warehouse.id }` } value={ warehouse.id }>
+                                        { warehouse.name }
+                                    </Option>
                                 )) }
                             </Select>
                         </Form.Item>

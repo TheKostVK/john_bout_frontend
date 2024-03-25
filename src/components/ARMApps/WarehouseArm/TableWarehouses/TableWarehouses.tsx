@@ -1,6 +1,7 @@
 import { Table, TableColumnsType } from "antd";
 import React from "react";
 import { IWarehouseTable } from "../WarehouseArm";
+import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 
 
 const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
@@ -27,11 +28,13 @@ const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
         {
             title: 'Текущая занятость',
             dataIndex: 'current_capacity',
+            render: (current_capacity: string) => `${ current_capacity } ед.`,
             width: 120,
         },
         {
             title: 'Вместимость',
             dataIndex: 'capacity',
+            render: (capacity: string) => `${ capacity } ед.`,
             width: 120,
         },
         {
@@ -47,7 +50,7 @@ const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
             columns={ columns }
             dataSource={ tableData }
             pagination={ false }
-            size={'small'}
+            size={ 'small' }
         />
     );
 };

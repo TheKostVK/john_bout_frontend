@@ -18,7 +18,7 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
         {
             title: 'ID',
             dataIndex: 'id',
-            width: 50,
+            width: 40,
         },
         {
             title: 'Покупатель',
@@ -48,13 +48,13 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
         {
             title: 'Сумма контракта',
             dataIndex: 'contract_amount',
-            render: (contract_amount: string) => `${Number(contract_amount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽`,
+            render: (contract_amount: string) => `${Number(contract_amount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} руб.`,
             width: 120,
         },
         {
             title: 'Валюта',
             dataIndex: 'currency',
-            width: 150,
+            width: 40,
         },
     ];
 

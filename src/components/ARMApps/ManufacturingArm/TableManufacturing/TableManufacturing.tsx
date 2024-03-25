@@ -40,7 +40,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'ID',
             dataIndex: 'id',
-            width: 50,
+            width: 40,
         },
         {
             title: 'Имя',
@@ -63,13 +63,15 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             width: 150,
         },
         {
-            title: 'Количество',
+            title: 'Количество на складе',
             dataIndex: 'quantity',
-            width: 120,
+            render: (quantity: string) => `${ quantity } ед.`,
+            width: 180,
         },
         {
             title: 'Зарезервировано',
             dataIndex: 'reserved_quantity',
+            render: (reserved_quantity: string) => `${ reserved_quantity } ед.`,
             width: 120,
         },
         {
@@ -81,7 +83,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
         {
             title: 'Цена за единицу',
             dataIndex: 'price',
-            render: (price: string) => `${Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽`,
+            render: (price: string) => `${Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} руб.`,
             width: 150,
         },
     ];

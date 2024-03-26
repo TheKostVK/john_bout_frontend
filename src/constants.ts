@@ -29,7 +29,7 @@ export const LS_KEYS = {
 /**
  * Статусы контрактов
  */
-export const contractStatus = [
+export const contractStatus: { text: string, value: string }[] = [
     {
         text: 'Ожидает подтверждения',
         value: 'pending_confirmation',
@@ -42,6 +42,24 @@ export const contractStatus = [
         text: 'Выполнен',
         value: 'completed',
     },
+];
+
+/**
+ * Типы складов
+ */
+export const warehouseType: { text: string, value: string }[] = [
+    {
+        text: 'Обычный',
+        value: 'common'
+    },
+    {
+        text: 'Авиационный ангар',
+        value: 'air'
+    },
+    {
+        text: 'Ангар для техники',
+        value: 'tech'
+    }
 ];
 
 /**

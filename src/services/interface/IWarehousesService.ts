@@ -12,6 +12,20 @@ export interface IWarehouse {
 }
 
 /**
+ * Интерфейс создания склада
+ */
+export interface IWarehouseCreate extends Omit<IWarehouse, "id"> {}
+
+/**
+ * Интерфейс ответа на создание склада
+ */
+export interface ICreateWarehouseResponse {
+    success: boolean,
+    data: IWarehouse,
+    message?: string
+}
+
+/**
  * Интерфейс для получения списка складов
  */
 export interface IGetWarehousesResponse {

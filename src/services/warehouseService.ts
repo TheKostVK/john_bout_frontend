@@ -4,7 +4,7 @@ import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions
 import { ICustomError } from "./interface/IErrorService";
 import { BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./authService";
-import { IGetWarehousesResponse } from "./interface/IWarehousesService";
+import { ICreateWarehouseResponse, IGetWarehousesResponse, IWarehouseCreate } from "./interface/IWarehousesService";
 
 const API: string = `http://${BASE_URL}/warehouses`;
 
@@ -21,9 +21,17 @@ export const warehouseService = createApi({
             }),
             providesTags: ['Warehouses']
         }),
+        createWarehouse: builder.mutation<ICreateWarehouseResponse, IWarehouseCreate>({
+            query: (body: IWarehouseCreate): string | FetchArgs => ({
+                url: `${API}`,
+                method: 'POST',
+                body: body
+            }),
+        }),
     }),
 });
 
 export const {
     useLazyGetWarehousesQuery,
+    useCreateWarehouseMutation
 } = warehouseService;

@@ -2,6 +2,7 @@ import { Table, TableColumnsType } from "antd";
 import React from "react";
 import { IWarehouseTable } from "../WarehouseArm";
 import { IWarehouse } from "../../../../services/interface/IWarehousesService";
+import { warehouseType } from "../../../../constants";
 
 
 const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
@@ -40,6 +41,7 @@ const TableWarehouses = ({ tableData }: { tableData: IWarehouseTable[] }) => {
         {
             title: 'Тип склада',
             dataIndex: 'warehouse_type',
+            filters: warehouseType,
             width: 150,
         },
     ];

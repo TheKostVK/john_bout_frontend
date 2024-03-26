@@ -8,6 +8,7 @@ import { useLazyGetWarehousesQuery } from "../../../services/warehouseService";
 import { IGetWarehousesResponse, IWarehouse } from "../../../services/interface/IWarehousesService";
 import { setWarehouses } from "../../../store/reducers/warehousesSlice";
 import TableWarehouses from "./TableWarehouses/TableWarehouses";
+import FormWarehouse from "./FormWarehouse/FomWarehouse";
 
 const { Sider } = Layout;
 
@@ -121,6 +122,7 @@ const WarehouseArm = () => {
 
             <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
                 { currentMenuOptions === 0 && <TableWarehouses tableData={ tableData }/> }
+                { currentMenuOptions === 1 && <FormWarehouse isCreate={ true }/> }
             </div>
         </div>
     );

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 import { useCreateProductMutation } from "../../../../services/productsService";
-import { ICreateProductResponse, IProductCreate } from "../../../../services/interface/IProductsService";
+import { ICreateProductResponse, IProduct, IProductCreate } from "../../../../services/interface/IProductsService";
 import messageUtility from "../../../utility/messageUtility";
 import { setProducts } from "../../../../store/reducers/productsSlice";
 import { typeToSubtypes } from "../../../../constants";
@@ -13,21 +13,9 @@ import { typeToSubtypes } from "../../../../constants";
 const { Option } = Select;
 const { TextArea } = Input;
 
-interface Characteristic {
-    [key: string]: string;
-}
-
-interface Product {
-    name: string;
-    product_type: string;
-    subtype: string;
-    characteristics: Characteristic[];
-    imgUrl: string;
-}
-
 interface Props {
     isCreate: boolean;
-    initialValues?: Product;
+    initialValues?: IProduct;
 }
 
 /**
@@ -38,6 +26,11 @@ interface Props {
  *     "Межконтинентальные ракеты": ["РС-24", "РС-26", "РС-28", "Р-36", "Р-36M", "РС-18", "РС-18B", "РС-18U", "РС-18У", "РС-20", "РС-20Б", "РС-20В", "РС-20ВЫ", "РС-20К", "РС-20КВ", "РС-20П", "РС-20ПВ", "РС-20Р", "РС-20РВ", "РС-20У", "РС-20УВ", "РС-22", "РС-22А", "РС-22Б", "РС-22Г", "РС-24", "РС-24А", "РС-24Б", "РС-24В", "РС-24Г", "РС-28", "РС-28А", "РС-28Б", "РС-28В", "РС-28Г"]
  */
 
+/**
+ * Форма создания продукта
+ * @param isCreate - флаг создания
+ * @param initialValues - значения по умолчанию
+ */
 const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     const [form] = Form.useForm();
 
@@ -61,7 +54,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
         if (!value) {
             return Promise.reject('Введите URL изображения товара');
         }
-        const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+        const urlRegex: RegExp = /^(ftp|http|https):\/\/[^ "]+$/;
         if (!urlRegex.test(value)) {
             return Promise.reject('Введите корректный URL изображения товара');
         }
@@ -125,227 +118,225 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
 
 
     return (
-        <>
-            <Form
-                form={ form }
-                onFinish={ onFinish }
-                initialValues={ initialValues }
-                layout="vertical"
-                style={ { width: '98%' } }
+        <Form
+            form={ form }
+            onFinish={ onFinish }
+            initialValues={ initialValues }
+            layout="vertical"
+            style={ { width: '98%' } }
+        >
+            <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="name"
+                        label="Название"
+                        rules={ [{ required: true, message: 'Введите название товара' }] }
+                    >
+                        <Input placeholder="Название товара"/>
+                    </Form.Item>
+                </Col>
+                <Col span={ 6 }>
+                    <Form.Item
+                        name="product_type"
+                        label="Тип"
+                        rules={ [{ required: true, message: 'Выберите тип товара' }] }
+                    >
+                        <Select placeholder="Выберите тип товара" onChange={ handleTypeChange }>
+                            { Object.keys(typeToSubtypes).map((type: string) => (
+                                <Option key={ type } value={ type }>{ type }</Option>
+                            )) }
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={ 10 }>
+                    <Form.Item
+                        name="product_subtype"
+                        label="Подтип"
+                        rules={ [{ required: true, message: 'Выберите подтип товара' }] }
+                    >
+                        <Select placeholder="Выберите подтип товара" disabled={ !selectedType }>
+                            { selectedType && typeToSubtypes[selectedType].map((subtype: string) => (
+                                <Option key={ subtype } value={ subtype }>{ subtype }</Option>
+                            )) }
+                        </Select>
+                    </Form.Item>
+                </Col>
+            </Row>
+
+            <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                <Col span={ 24 }>
+                    <Form.Item
+                        name="imgUrl"
+                        label="URL изображения товара"
+                        rules={ [{ validator: validateURL }] }
+                    >
+                        <Input placeholder="URL изображения товара"/>
+                    </Form.Item>
+                </Col>
+            </Row>
+
+            <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                <Col span={ 24 }>
+                    <Form.Item
+                        name="product_description"
+                        label="Описание товара"
+                        rules={ [{ required: true, message: 'Введите описание товара' }] }
+                    >
+                        <TextArea rows={ 4 }/>
+                    </Form.Item>
+                </Col>
+            </Row>
+
+            <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="quantity"
+                        label="Количество товара на складе"
+                        rules={ [{ required: true, message: 'Введите количество товара' }] }
+                    >
+                        <Input type="number" placeholder="Количество товара" suffix={ 'шт.' }/>
+                    </Form.Item>
+                </Col>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="occupied_space"
+                        label="Занимаемое место товаром"
+                        rules={ [{ required: true, message: 'Введите занимаемое место товаром' }] }
+                    >
+                        <Input type="number" placeholder="Занимаемое место" suffix={ 'поз.' }/>
+                    </Form.Item>
+                </Col>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="storage_location"
+                        label="Склад хранения товара"
+                        rules={ [{ required: true, message: 'Введите номер склада для хранения товара' }] }
+                    >
+                        <Select placeholder={ 'Выберите склад' } disabled={ !selectedType || !subtypes }>
+                            { availableWarehouses.map((warehouse: IWarehouse) => (
+                                <Option key={ `warehouse-${ warehouse.id }` } value={ warehouse.id }>
+                                    { warehouse.name }
+                                </Option>
+                            )) }
+                        </Select>
+                    </Form.Item>
+                </Col>
+            </Row>
+
+            <Form.Item
+                name="characteristics"
+                label="Характеристики"
             >
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="name"
-                            label="Название"
-                            rules={ [{ required: true, message: 'Введите название товара' }] }
-                        >
-                            <Input placeholder="Название товара"/>
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 6 }>
-                        <Form.Item
-                            name="product_type"
-                            label="Тип"
-                            rules={ [{ required: true, message: 'Выберите тип товара' }] }
-                        >
-                            <Select placeholder="Выберите тип товара" onChange={ handleTypeChange }>
-                                { Object.keys(typeToSubtypes).map((type: string) => (
-                                    <Option key={ type } value={ type }>{ type }</Option>
-                                )) }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 10 }>
-                        <Form.Item
-                            name="product_subtype"
-                            label="Подтип"
-                            rules={ [{ required: true, message: 'Выберите подтип товара' }] }
-                        >
-                            <Select placeholder="Выберите подтип товара" disabled={ !selectedType }>
-                                { selectedType && typeToSubtypes[selectedType].map((subtype: string) => (
-                                    <Option key={ subtype } value={ subtype }>{ subtype }</Option>
-                                )) }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 24 }>
-                        <Form.Item
-                            name="imgUrl"
-                            label="URL изображения товара"
-                            rules={[{ validator: validateURL }]}
-                        >
-                            <Input placeholder="URL изображения товара"/>
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 24 }>
-                        <Form.Item
-                            name="product_description"
-                            label="Описание товара"
-                            rules={ [{ required: true, message: 'Введите описание товара' }] }
-                        >
-                            <TextArea rows={4} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="quantity"
-                            label="Количество товара на складе"
-                            rules={ [{ required: true, message: 'Введите количество товара' }] }
-                        >
-                            <Input type="number" placeholder="Количество товара" suffix={ 'шт.' }/>
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="occupied_space"
-                            label="Занимаемое место товаром"
-                            rules={ [{ required: true, message: 'Введите занимаемое место товаром' }] }
-                        >
-                            <Input type="number" placeholder="Занимаемое место" suffix={ 'поз.' }/>
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="storage_location"
-                            label="Склад хранения товара"
-                            rules={ [{ required: true, message: 'Введите номер склада для хранения товара' }] }
-                        >
-                            <Select placeholder={ 'Выберите склад' } disabled={ !selectedType || !subtypes }>
-                                { availableWarehouses.map((warehouse: IWarehouse) => (
-                                    <Option key={ `warehouse-${ warehouse.id }` } value={ warehouse.id }>
-                                        { warehouse.name }
-                                    </Option>
-                                )) }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Form.Item
-                    name="characteristics"
-                    label="Характеристики"
-                >
-                    <Form.List name="characteristics">
-                        { (fields, { add, remove }) => (
-                            <>
-                                { fields.map(({ key, name, fieldKey = 0, ...restField }) => (
-                                    <Form.Item
-                                        { ...restField }
-                                        key={ fieldKey?.toString() }
-                                    >
-                                        <Row gutter={ [10, 10] }>
-                                            <Col span={ 10 }>
-                                                <Form.Item
-                                                    name={ [name, 'name'] }
-                                                    fieldKey={ [fieldKey, 'name'] }
-                                                    noStyle
-                                                >
-                                                    <Input placeholder="Имя характеристики"/>
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={ 10 }>
-                                                <Form.Item
-                                                    name={ [name, 'value'] }
-                                                    fieldKey={ [fieldKey, 'value'] }
-                                                    noStyle
-                                                >
-                                                    <Input placeholder="Значение характеристики"/>
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={ 4 }>
-                                                <MinusCircleOutlined onClick={ () => remove(fieldKey) }/>
-                                            </Col>
-                                        </Row>
-                                    </Form.Item>
-                                )) }
-                                <Form.Item>
+                <Form.List name="characteristics">
+                    { (fields, { add, remove }) => (
+                        <>
+                            { fields.map(({ key, name, fieldKey = 0, ...restField }) => (
+                                <Form.Item
+                                    { ...restField }
+                                    key={ fieldKey?.toString() }
+                                >
                                     <Row gutter={ [10, 10] }>
-                                        <Col span={ 3 }>
-                                            <Button
-                                                type="dashed"
-                                                onClick={ () => add() }
-                                                icon={ <PlusOutlined/> }
-                                                disabled={ subtypes.length === 0 }
+                                        <Col span={ 10 }>
+                                            <Form.Item
+                                                name={ [name, 'name'] }
+                                                fieldKey={ [fieldKey, 'name'] }
+                                                noStyle
                                             >
-                                                Добавить характеристику
-                                            </Button>
+                                                <Input placeholder="Имя характеристики"/>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={ 10 }>
+                                            <Form.Item
+                                                name={ [name, 'value'] }
+                                                fieldKey={ [fieldKey, 'value'] }
+                                                noStyle
+                                            >
+                                                <Input placeholder="Значение характеристики"/>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={ 4 }>
+                                            <MinusCircleOutlined onClick={ () => remove(fieldKey) }/>
                                         </Col>
                                     </Row>
                                 </Form.Item>
-                            </>
-                        ) }
-                    </Form.List>
-                </Form.Item>
+                            )) }
+                            <Form.Item>
+                                <Row gutter={ [10, 10] }>
+                                    <Col span={ 3 }>
+                                        <Button
+                                            type="dashed"
+                                            onClick={ () => add() }
+                                            icon={ <PlusOutlined/> }
+                                            disabled={ subtypes.length === 0 }
+                                        >
+                                            Добавить характеристику
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form.Item>
+                        </>
+                    ) }
+                </Form.List>
+            </Form.Item>
 
-                <Row className={ 'mb-2' } gutter={ [10, 10] }>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="production_cost"
-                            label="Стоимость производства одной единицы товара"
-                            rules={ [{ required: true, message: 'Введите стоимость производства' }] }
-                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
-                            normalize={ (value) => (value === '0.00' ? undefined : value) }
-                        >
-                            <InputNumber
-                                style={ { width: '100%' } }
-                                placeholder="Стоимость производства"
-                                formatter={ (value: any) => (
-                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
-                                ) }
-                                min={ '0.00' }
-                                defaultValue={ '0.00' }
-                                step={ 0.01 }
-                                precision={ 2 }
-                                prefix={ '₽' }
-                                suffix={ 'руб.' }
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
-                        <Form.Item
-                            name="price"
-                            label="Стоимость продажи одной единицы товара"
-                            rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
-                            getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
-                            normalize={ (value) => (value === '0.00' ? undefined : value) }
-                        >
-                            <InputNumber
-                                style={ { width: '100%' } }
-                                placeholder="Стоимость продажи"
-                                formatter={ (value: any) => (
-                                    value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
-                                ) }
-                                min={ '0.00' }
-                                defaultValue={ '0.00' }
-                                step={ 0.01 }
-                                precision={ 2 }
-                                prefix={ '₽' }
-                                suffix={ 'руб.' }
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 8 }>
+            <Row className={ 'mb-2' } gutter={ [10, 10] }>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="production_cost"
+                        label="Стоимость производства одной единицы товара"
+                        rules={ [{ required: true, message: 'Введите стоимость производства' }] }
+                        getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                        normalize={ (value) => (value === '0.00' ? undefined : value) }
+                    >
+                        <InputNumber
+                            style={ { width: '100%' } }
+                            placeholder="Стоимость производства"
+                            formatter={ (value: any) => (
+                                value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                            ) }
+                            min={ '0.00' }
+                            defaultValue={ '0.00' }
+                            step={ 0.01 }
+                            precision={ 2 }
+                            prefix={ '₽' }
+                            suffix={ 'руб.' }
+                        />
+                    </Form.Item>
+                </Col>
+                <Col span={ 8 }>
+                    <Form.Item
+                        name="price"
+                        label="Стоимость продажи одной единицы товара"
+                        rules={ [{ required: true, message: 'Введите стоимость продажи' }] }
+                        getValueFromEvent={ (value) => (typeof value === 'number' ? parseFloat(`${ value }`).toFixed(2) : value) }
+                        normalize={ (value) => (value === '0.00' ? undefined : value) }
+                    >
+                        <InputNumber
+                            style={ { width: '100%' } }
+                            placeholder="Стоимость продажи"
+                            formatter={ (value: any) => (
+                                value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
+                            ) }
+                            min={ '0.00' }
+                            defaultValue={ '0.00' }
+                            step={ 0.01 }
+                            precision={ 2 }
+                            prefix={ '₽' }
+                            suffix={ 'руб.' }
+                        />
+                    </Form.Item>
+                </Col>
+                <Col span={ 8 }>
 
-                    </Col>
-                </Row>
+                </Col>
+            </Row>
 
-                <Form.Item>
-                    <Button htmlType="submit">
-                        Создать товар
-                    </Button>
-                </Form.Item>
-            </Form>
-        </>
+            <Form.Item>
+                <Button htmlType="submit">
+                    Создать товар
+                </Button>
+            </Form.Item>
+        </Form>
     );
 };
 

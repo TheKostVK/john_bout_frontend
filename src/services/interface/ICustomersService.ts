@@ -14,6 +14,20 @@ export interface ICustomer {
 }
 
 /**
+ * Интерфейс создания нового покупателя.
+ */
+export interface ICreateCustomerRequest extends Omit<ICustomer, "id"> {}
+
+/**
+ * Интерфейс ответа на запрос создания нового покупателя.
+ */
+export interface ICreateCustomerResponse {
+    success: boolean,
+    data: ICustomer,
+    message?: string
+}
+
+/**
  * Интерфейс ответа на запрос получения списка покупателей.
  */
 export interface IGetCustomersListResponse {

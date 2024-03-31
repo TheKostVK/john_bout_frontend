@@ -2,7 +2,11 @@ import { createApi, FetchArgs } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from '../constants';
 import { ICustomError } from "./interface/IErrorService";
 import { BaseQueryFn } from "@reduxjs/toolkit/query/react";
-import { IGetCustomersListResponse } from "./interface/ICustomersService";
+import {
+    ICreateCustomerRequest,
+    ICreateCustomerResponse,
+    IGetCustomersListResponse
+} from "./interface/ICustomersService";
 import { baseQuery } from "./authService";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
@@ -21,9 +25,18 @@ export const customersService = createApi({
             }),
             providesTags: ['Customers']
         }),
+        createCustomers: builder.mutation<ICreateCustomerResponse, ICreateCustomerRequest>({
+            query: (customer: ICreateCustomerRequest) => ({
+                url: `${API}`,
+                method: 'POST',
+                body: customer
+            }),
+            invalidatesTags: ['Customers']
+        }),
     }),
 });
 
 export const {
     useLazyGetCustomersQuery,
+    useCreateCustomersMutation
 } = customersService;

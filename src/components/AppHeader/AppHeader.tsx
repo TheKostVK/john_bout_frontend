@@ -1,4 +1,4 @@
-import { Menu, type MenuProps } from "antd";
+import { Menu } from "antd";
 import React from "react";
 import { Layout } from 'antd';
 import { NavigateFunction, useNavigate } from "react-router-dom";

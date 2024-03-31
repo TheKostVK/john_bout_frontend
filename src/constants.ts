@@ -27,20 +27,56 @@ export const LS_KEYS = {
 };
 
 /**
+ * Допустимые значения типа заказчика
+ */
+export const  customerType: { text: string, value: string }[] = [
+    {
+        text: 'Юридическое лицо',
+        value: 'юридическое лицо',
+    },
+    {
+        text: 'Физическое лицо',
+        value: 'физическое лицо',
+    },
+    {
+        text: 'Организация',
+        value: 'организация',
+    },
+];
+
+/**
+ * Список доступных валют
+ */
+export const  customerCurrency: { text: string, value: string }[] = [
+    {
+        text: 'RUB',
+        value: 'RUB',
+    },
+    {
+        text: 'CNY',
+        value: 'CNY',
+    },
+    {
+        text: 'USD',
+        value: 'USD',
+    },
+];
+
+/**
  * Статусы контрактов
  */
 export const contractStatus: { text: string, value: string }[] = [
     {
         text: 'Ожидает подтверждения',
-        value: 'pending_confirmation',
+        value: 'Ожидает подтверждения',
     },
     {
         text: 'В процессе выполнения',
-        value: 'in_progress',
+        value: 'В процессе выполнения',
     },
     {
         text: 'Выполнен',
-        value: 'completed',
+        value: 'Выполнен',
     },
 ];
 
@@ -50,15 +86,15 @@ export const contractStatus: { text: string, value: string }[] = [
 export const warehouseType: { text: string, value: string }[] = [
     {
         text: 'Обычный',
-        value: 'common'
+        value: 'Обычный'
     },
     {
         text: 'Авиационный ангар',
-        value: 'air'
+        value: 'Авиационный ангар'
     },
     {
         text: 'Ангар для техники',
-        value: 'tech'
+        value: 'Ангар для техники'
     }
 ];
 

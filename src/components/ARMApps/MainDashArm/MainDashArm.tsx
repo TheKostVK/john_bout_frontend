@@ -1,42 +1,66 @@
-import { Divider, Layout, Menu, type MenuProps, theme } from "antd";
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
-import React from "react";
+import { Layout, Menu, type MenuProps, theme } from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
 
-const { Content, Footer, Sider } = Layout;
+const { Sider } = Layout;
 
-
+/**
+ * АРМ главного экрана
+ */
 const MainDashArm = () => {
-
-
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+    const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
 
-    const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-        (icon, index) => {
-            const key = String(index + 1);
+    const [currentMenuOptions, setCurrentMenuOptions] = useState<number>(0);
+    const [tableData, setTableData] = useState<any[]>([]);
 
-            return {
-                key: `sub${ key }`,
-                icon: React.createElement(icon),
-                label: `subnav ${ key }`,
+    const dispatch = useDispatch();
 
-                children: new Array(4).fill(null).map((_, j) => {
-                    const subKey = index * 4 + j + 1;
-                    return {
-                        key: subKey,
-                        label: `option${ subKey }`,
-                    };
-                }),
-            };
+    /**
+     * Содержимое бокового меню.
+     */
+    const menuItems: MenuProps['items'] = [
+        {
+            key: `mainList`,
+            icon: <OrderedListOutlined/>,
+            label: `Главная`,
         },
-    );
+    ];
+
+    /**
+     * Обработчик нажатия на боковое меню.
+     */
+    const onClickMenu: MenuProps['onClick'] = (e): void => {
+        switch (e.key) {
+            case `mainList`:
+                setCurrentMenuOptions(0);
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
-        <div>
-            <Divider orientation="left">mainDashArm</Divider>
+        <div className={ 'flex space-x-7' } style={ { width: '100%', height: '610px' } }>
+            <Sider width={ 200 } style={ { background: colorBgContainer } }>
+                <Menu
+                    onClick={ onClickMenu }
+                    mode="inline"
+                    defaultSelectedKeys={ [`mainList`] }
+                    style={ { borderRight: 0 } }
+                    items={ menuItems }
+                />
+            </Sider>
+
+            <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
+
+            </div>
         </div>
-    )
+    );
 };
 
 export default MainDashArm;

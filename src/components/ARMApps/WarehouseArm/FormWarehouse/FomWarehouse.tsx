@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import {
     ICreateWarehouseResponse,
     IWarehouse,
-    IWarehouseCreate
+    IWarehouseCreateRequest
 } from "../../../../services/interface/IWarehousesService";
 import { useCreateWarehouseMutation } from "../../../../services/warehouseService";
 import messageUtility from "../../../utility/messageUtility";
@@ -36,7 +36,7 @@ const FormWarehouse: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     /**
      * Обработчик создания склада.
      */
-    const onFinish = (values: IWarehouseCreate) => {
+    const onFinish = (values: IWarehouseCreateRequest) => {
         messageUtility.showMessage({
             key: 'createWarehouse',
             type: 'loading',
@@ -45,8 +45,6 @@ const FormWarehouse: React.FC<Props> = ({ isCreate = true, initialValues }) => {
         });
 
         values.current_capacity = 0;
-
-        console.log(values)
 
         createWarehouse(values).unwrap().then((response: ICreateWarehouseResponse) => {
             if (response.success) {
@@ -87,7 +85,7 @@ const FormWarehouse: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     >
                         <Select placeholder="Выберите тип склада">
                             { warehouseType.map((type) => (
-                                <Option key={ type.value } value={ type.text }>{ type.text }</Option>
+                                <Option key={ type.value } value={ type.value }>{ type.text }</Option>
                             )) }
                         </Select>
                     </Form.Item>

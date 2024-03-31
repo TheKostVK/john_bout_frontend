@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 import { useCreateProductMutation } from "../../../../services/productsService";
-import { ICreateProductResponse, IProduct, IProductCreate } from "../../../../services/interface/IProductsService";
+import { ICreateProductResponse, IProduct, IProductCreateRequest } from "../../../../services/interface/IProductsService";
 import messageUtility from "../../../utility/messageUtility";
 import { setProducts } from "../../../../store/reducers/productsSlice";
 import { typeToSubtypes } from "../../../../constants";
@@ -64,7 +64,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     /**
      * Обработчик создания товара.
      */
-    const onFinish = (values: IProductCreate) => {
+    const onFinish = (values: IProductCreateRequest) => {
         messageUtility.showMessage({
             key: 'createProduct',
             type: 'loading',

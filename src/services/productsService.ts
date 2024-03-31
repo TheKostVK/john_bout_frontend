@@ -4,7 +4,7 @@ import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions
 import { ICustomError } from "./interface/IErrorService";
 import { BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./authService";
-import { ICreateProductResponse, IGetProductsListResponse, IProductCreate } from "./interface/IProductsService";
+import { ICreateProductResponse, IGetProductsListResponse, IProductCreateRequest } from "./interface/IProductsService";
 
 const API: string = `http://${BASE_URL}/products`;
 
@@ -21,11 +21,11 @@ export const productService = createApi({
             }),
             providesTags: ['Products']
         }),
-        createProduct: builder.mutation<ICreateProductResponse, IProductCreate>({
-            query: (body: IProductCreate): string | FetchArgs => ({
+        createProduct: builder.mutation<ICreateProductResponse, IProductCreateRequest>({
+            query: (product: IProductCreateRequest): string | FetchArgs => ({
                 url: `${API}`,
                 method: 'POST',
-                body: body
+                body: product
             }),
             invalidatesTags: ['Products']
         }),

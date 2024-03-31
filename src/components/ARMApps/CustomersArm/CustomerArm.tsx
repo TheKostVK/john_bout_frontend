@@ -8,6 +8,7 @@ import { ICustomer, IGetCustomersListResponse } from "../../../services/interfac
 import messageUtility from "../../utility/messageUtility";
 import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
 import TableCustomers from "./TableCustomers/TableCustomers";
+import FormCustomer from "./FormCustomer/FomCustomer";
 
 const { Sider } = Layout;
 
@@ -40,6 +41,11 @@ const CustomerArm = () => {
             icon: <OrderedListOutlined/>,
             label: `Список клиентов`,
         },
+        {
+            key: `createCustomer`,
+            icon: <AppstoreAddOutlined/>,
+            label: `Создание клиента`,
+        },
     ];
 
     /**
@@ -49,6 +55,9 @@ const CustomerArm = () => {
         switch (e.key) {
             case `customersList`:
                 setCurrentMenuOptions(0);
+                break;
+            case 'createCustomer':
+                setCurrentMenuOptions(1);
                 break;
             default:
                 break;
@@ -113,6 +122,7 @@ const CustomerArm = () => {
 
             <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
                 { currentMenuOptions === 0 && <TableCustomers tableData={ tableData }/> }
+                { currentMenuOptions === 1 && <FormCustomer isCreate={ true }/> }
             </div>
         </div>
     )

@@ -21,7 +21,7 @@ export interface IProduct {
 /**
  * Интерфейс создания товара
  */
-export interface IProductCreate extends Omit<IProduct, "id"> {}
+export interface IProductCreateRequest extends Omit<IProduct, "id"> {}
 
 /**
  * Интерфейс ответа на запрос получения списка товаров.

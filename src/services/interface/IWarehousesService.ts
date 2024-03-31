@@ -14,7 +14,7 @@ export interface IWarehouse {
 /**
  * Интерфейс создания склада
  */
-export interface IWarehouseCreate extends Omit<IWarehouse, "id"> {}
+export interface IWarehouseCreateRequest extends Omit<IWarehouse, "id"> {}
 
 /**
  * Интерфейс ответа на создание склада

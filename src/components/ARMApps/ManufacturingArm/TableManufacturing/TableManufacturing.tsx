@@ -1,4 +1,4 @@
-import RowCard from "./RowCard/RowCard";
+import RowCardProduct from "./RowCard/RowCardProduct";
 import { Table, TableColumnsType } from "antd";
 import React from "react";
 import { IProductTable } from "../ManufacturingArm";
@@ -7,7 +7,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 
-
+/**
+ * Таблица товаров
+ * @param tableData - данные таблицы
+ */
 const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
     const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
 
@@ -51,7 +54,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             title: 'Тип',
             dataIndex: 'product_type',
             filters: typeFilters,
-            onFilter: (value: any, record: IProductTable) => record.product_type === value,
+            onFilter: (value: any, record: IProductTable): boolean => record.product_type === value,
             width: 150,
         },
         {
@@ -59,31 +62,31 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             dataIndex: 'product_subtype',
             filters: subTypeFilters.flatMap(type => type.children), // Используем подтипы в фильтрах
             filterSearch: true,
-            onFilter: (value: any, record: IProductTable) => record.product_subtype === value,
+            onFilter: (value: any, record: IProductTable): boolean => record.product_subtype === value,
             width: 150,
         },
         {
             title: 'Количество на складе',
             dataIndex: 'quantity',
-            render: (quantity: string) => `${ quantity } ед.`,
+            render: (quantity: string): string => `${ quantity } ед.`,
             width: 180,
         },
         {
             title: 'Зарезервировано',
             dataIndex: 'reserved_quantity',
-            render: (reserved_quantity: string) => `${ reserved_quantity } ед.`,
+            render: (reserved_quantity: string): string => `${ reserved_quantity } ед.`,
             width: 120,
         },
         {
             title: 'Склад',
             dataIndex: 'storage_location',
-            render: (storage_location: string) => warehouses.find((warehouse: IWarehouse) => warehouse.id === Number(storage_location))?.name || storage_location,
+            render: (storage_location: string) => warehouses.find((warehouse: IWarehouse): boolean => warehouse.id === Number(storage_location))?.name || storage_location,
             width: 150,
         },
         {
             title: 'Цена за единицу',
             dataIndex: 'price',
-            render: (price: string) => `${Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} руб.`,
+            render: (price: string): string => `${Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} руб.`,
             width: 150,
         },
     ];
@@ -98,7 +101,7 @@ const TableManufacturing = ({ tableData }: { tableData: IProductTable[] }) => {
             expandable={ {
                 expandedRowRender: (product: IProductTable) => {
                     return (
-                        <RowCard product={ product }/>
+                        <RowCardProduct product={ product }/>
                     );
                 },
                 rowExpandable: (product: IProductTable): boolean => product.name !== 'Нет данных',

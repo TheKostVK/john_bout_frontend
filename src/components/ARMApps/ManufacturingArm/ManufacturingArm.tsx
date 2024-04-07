@@ -72,7 +72,7 @@ const ManufacturingArm = () => {
             .unwrap()
             .then((productsResp: IGetProductsListResponse): void => {
                 dispatch(setProducts(productsResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({

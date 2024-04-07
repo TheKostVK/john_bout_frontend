@@ -14,7 +14,6 @@ const AppRouter = () => {
             <Route path="/warehouse" element={ <Main /> }/>
             <Route path="/contracts" element={ <Main /> }/>
 
-
             {/* Дополнительные маршруты */ }
             <Route path="/*" element={ <Page404/> }/>
         </Routes>

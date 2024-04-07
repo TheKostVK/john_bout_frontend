@@ -11,7 +11,7 @@ const { Title, Text, Paragraph } = Typography;
  * Карточка с информацией о товаре
  * @param product - товар для отображения
  */
-const RowCard = ({ product }: { product: IProductTable }) => {
+const RowCardProduct = ({ product }: { product: IProductTable }) => {
     const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
 
     return (
@@ -35,7 +35,7 @@ const RowCard = ({ product }: { product: IProductTable }) => {
                 </Col>
 
                 <Col span={ 8 }>
-                    <p>Тип</p>
+                    <p>Тип товара</p>
                     <Title level={ 4 }>{ product.product_type }</Title>
                 </Col>
                 <Col span={ 8 }>
@@ -119,4 +119,4 @@ const RowCard = ({ product }: { product: IProductTable }) => {
     )
 };
 
-export default RowCard;
+export default RowCardProduct;

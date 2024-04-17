@@ -1,6 +1,9 @@
 import React from "react";
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import { ArgsProps } from 'antd/lib/message';
+
+const { confirm } = Modal;
 
 /**
  * Типы для различных уведомлений.
@@ -59,6 +62,36 @@ interface MessageData {
 }
 
 /**
+ * Интерфейс для модального окна с подтверждением.
+ **/
+interface confirmMessageData {
+    /**
+     * Заголовок уведомления.
+     **/
+    title: string;
+
+    /**
+     * Иконка уведомления.
+     **/
+    icon?: React.JSX.Element;
+
+    /**
+     * Содержимое уведомления.
+     **/
+    content: string;
+
+    /**
+     * Колл бек при нажатии 'ок'.
+     **/
+    onOk: any;
+
+    /**
+     * Колл бек при нажатии 'отмена'
+     **/
+    onCancel: any;
+}
+
+/**
  * Интерфейс для утилиты уведомлений.
  **/
 interface MessageUtility {
@@ -71,6 +104,11 @@ interface MessageUtility {
      * Метод для уничтожения сообщения по ключу.
      **/
     destroyMessage: (key: string) => void;
+
+    /**
+     * Метод для отображения окна с подтверждением
+     */
+    showConfirmMessage: (confirmMessageData: confirmMessageData) => void;
 }
 
 /**
@@ -134,7 +172,6 @@ const messageUtility: MessageUtility = {
         } as ArgsProps).then((): void => {
             // Ничего
         });
-        ;
     },
 
     /**
@@ -143,6 +180,26 @@ const messageUtility: MessageUtility = {
      */
     destroyMessage: (key: string): void => {
         message.destroy(key);
+    },
+
+    /**
+     * Утилита для отображения модального окна с подтверждением действия.
+     * @param confirmMessageData - конфигурация сообщения
+     */
+    showConfirmMessage: (confirmMessageData: confirmMessageData): void => {
+        const { title, icon = <ExclamationCircleFilled/>, content, onOk, onCancel } = confirmMessageData;
+
+        confirm({
+            title: title,
+            icon: icon,
+            content: content,
+            onOk(): void {
+                onOk();
+            },
+            onCancel(): void {
+                onCancel();
+            },
+        });
     }
 };
 

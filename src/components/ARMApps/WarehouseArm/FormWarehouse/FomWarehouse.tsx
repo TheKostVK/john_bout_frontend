@@ -10,7 +10,7 @@ import {
 import { useCreateWarehouseMutation } from "../../../../services/warehouseService";
 import messageUtility from "../../../utility/messageUtility";
 import { warehouseType } from "../../../../constants";
-import { setWarehouses } from "../../../../store/reducers/warehousesSlice";
+import { addWarehouse, setWarehouses } from "../../../../store/reducers/warehousesSlice";
 
 const { Option } = Select;
 
@@ -49,7 +49,7 @@ const FormWarehouse: React.FC<Props> = ({ isCreate = true, initialValues }) => {
         createWarehouse(values).unwrap().then((response: ICreateWarehouseResponse) => {
             if (response.success) {
 
-                dispatch(setWarehouses([...warehouses, response.data]));
+                dispatch(addWarehouse(response.data));
 
                 messageUtility.showMessage({
                     key: 'createWarehouse',

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Layout, theme, ThemeConfig } from 'antd';
+import { Layout, theme, ConfigProvider } from 'antd';
+import ru_RU from "antd/lib/locale/ru_RU";
 import AppHeader from "../../components/AppHeader/AppHeader";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { DEFAULT_MODULE, LS_KEYS, MODULES_ENUM } from "../../constants";
@@ -22,6 +23,11 @@ import ContractsArm from "../../components/ARMApps/ContractsArm/ContractsArm";
 import { setContracts } from "../../store/reducers/contractsSlice";
 import { useLazyGetContractsQuery } from "../../services/contractsService";
 import { IGetContractsResponse } from "../../services/interface/IContractsService";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+
+dayjs.locale("ru");
+
 
 const { Content, Footer } = Layout;
 
@@ -48,7 +54,7 @@ const Main: React.FC = () => {
     const handleGetCustomers = () => {
         getCustomers()
             .unwrap()
-            .then((customersResp: IGetCustomersListResponse) => {
+            .then((customersResp: IGetCustomersListResponse): void => {
                 dispatch(setCustomers(customersResp.data));
             }).catch((err) => {
             console.error(err);
@@ -105,7 +111,7 @@ const Main: React.FC = () => {
     const handleGetContracts = () => {
         getContracts()
             .unwrap()
-            .then((contractsResp: IGetContractsResponse) => {
+            .then((contractsResp: IGetContractsResponse): void => {
                 dispatch(setContracts(contractsResp.data));
             }).catch((err) => {
             console.error(err);
@@ -149,33 +155,35 @@ const Main: React.FC = () => {
     useEffect(checkModule, [navigate]);
 
     return (
-        <Layout style={ { minHeight: '100vh', background: colorBgBase, } }>
-            <AppHeader/>
+        <ConfigProvider locale={ ru_RU }>
+            <Layout style={ { minHeight: '100vh', background: colorBgBase, } }>
+                <AppHeader/>
 
-            <Content style={ { padding: '0 24px', marginTop: '24px' } }>
-                <Layout
-                    style={ {
-                        minHeight: '80vh',
-                        padding: '5px 0',
-                        background: colorBgContainer,
-                        borderRadius: borderRadiusLG
-                    } }
-                >
-                    <div
-                        style={ { margin: '24px', minWidth: '95%' } }
+                <Content style={ { padding: '0 24px', marginTop: '24px' } }>
+                    <Layout
+                        style={ {
+                            minHeight: '80vh',
+                            padding: '5px 0',
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG
+                        } }
                     >
-                        { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
-                        { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
-                        { moduleId === MODULES_ENUM.manufacturing && <ManufacturingArm/> }
-                        { moduleId === MODULES_ENUM.warehouse && <WarehouseArm/> }
-                        { moduleId === MODULES_ENUM.contracts && <ContractsArm/> }
-                    </div>
-                </Layout>
-            </Content>
-            <Footer style={ { textAlign: 'center', background: colorBgBase } }>
-                УВЗ ©{ new Date().getFullYear() }
-            </Footer>
-        </Layout>
+                        <div
+                            style={ { margin: '24px', minWidth: '95%' } }
+                        >
+                            { moduleId === MODULES_ENUM.dash && <MainDashArm/> }
+                            { moduleId === MODULES_ENUM.customers && <CustomerArm/> }
+                            { moduleId === MODULES_ENUM.manufacturing && <ManufacturingArm/> }
+                            { moduleId === MODULES_ENUM.warehouse && <WarehouseArm/> }
+                            { moduleId === MODULES_ENUM.contracts && <ContractsArm/> }
+                        </div>
+                    </Layout>
+                </Content>
+                <Footer style={ { textAlign: 'center', background: colorBgBase } }>
+                    УВЗ ©{ new Date().getFullYear() }
+                </Footer>
+            </Layout>
+        </ConfigProvider>
     );
 };
 

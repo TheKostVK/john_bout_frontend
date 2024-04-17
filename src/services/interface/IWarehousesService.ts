@@ -1,3 +1,5 @@
+import { IResponseBase } from "./globalTypes";
+
 /**
  * Интерфейс склада
  */
@@ -19,17 +21,13 @@ export interface IWarehouseCreateRequest extends Omit<IWarehouse, "id"> {}
 /**
  * Интерфейс ответа на создание склада
  */
-export interface ICreateWarehouseResponse {
-    success: boolean,
-    data: IWarehouse,
-    message?: string
+export interface ICreateWarehouseResponse extends IResponseBase<IWarehouse>{
+
 }
 
 /**
  * Интерфейс для получения списка складов
  */
-export interface IGetWarehousesResponse {
-    success: boolean,
-    data: IWarehouse[],
-    message?: string
+export interface IGetWarehousesResponse extends IResponseBase<IWarehouse[]>{
+
 }

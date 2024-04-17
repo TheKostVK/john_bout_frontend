@@ -1,6 +1,6 @@
 import React from "react";
-import { Card, Col, Divider, Image, Row, Typography, Statistic, Table, TableColumnsType } from "antd";
-import { useSelector } from "react-redux";
+import { Card, Col, Divider, Row, Typography, Statistic, Table, TableColumnsType, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/store";
 import { IContractsTable } from "../../ContractsArm";
 import { ICustomer } from "../../../../../services/interface/ICustomersService";
@@ -10,12 +10,20 @@ import { IProductTable } from "../../../ManufacturingArm/ManufacturingArm";
 import RowCardProduct from "../../../ManufacturingArm/TableManufacturing/RowCard/RowCardProduct";
 import { typeToSubtypes } from "../../../../../constants";
 import { IWarehouse } from "../../../../../services/interface/IWarehousesService";
+import { useChangeContractStatusMutation, useCompleteContractMutation } from "../../../../../services/contractsService";
+import messageUtility from "../../../../utility/messageUtility";
+import {
+    IChangeStatusContractResponse,
+    ICompleteContractResponse
+} from "../../../../../services/interface/IContractsService";
+import { updateStatusContract } from "../../../../../store/reducers/contractsSlice";
+import { contractStatus } from "../../../../../services/interface/globalTypes";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title } = Typography;
 
 interface IProductContractTable extends IProductTable {
     contactQuantity: number;
-};
+}
 
 /**
  * Карточка с информацией о контракте
@@ -25,6 +33,11 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
     const { customers } = useSelector((state: RootState) => state.customerReducer);
     const { warehouses } = useSelector((state: RootState) => state.warehouseReducer);
     const { products } = useSelector((state: RootState) => state.productReducer);
+
+    const [completeContract] = useCompleteContractMutation();
+    const [changeStatusContract] = useChangeContractStatusMutation();
+
+    const dispatch = useDispatch();
 
     /**
      * Создаем массив объектов фильтров для типов
@@ -113,6 +126,122 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
     ];
 
     /**
+     * Метод переводит контракт на следующий этап
+     * @param contractId - id контракта
+     */
+    const handleChangeStatusContract = (contractId: number): void => {
+        /**
+         * Завершает контракт
+         */
+        const toChangeStatusContract = (contractIdToComplete: number, newContractStatus: contractStatus): void => {
+            messageUtility.showMessage({
+                key: 'contractChangeStatus',
+                type: 'loading',
+                content: 'Идет завершение контракта...',
+            });
+
+            changeStatusContract({
+                contractId: contractIdToComplete,
+                bodyStatus: {
+                    newStatus: newContractStatus
+                }
+            }).unwrap().then((respContract: IChangeStatusContractResponse): void => {
+                if (respContract.success) {
+                    messageUtility.showMessage({
+                        key: 'contractChangeStatus',
+                        type: 'success',
+                        content: 'Контракт успешно переведен на следующий этап',
+                    });
+
+                    dispatch(updateStatusContract({ contractID: contractIdToComplete, newStatus: newContractStatus }));
+                }
+            }).catch((err): void => {
+                messageUtility.showMessage({
+                    key: 'contractChangeStatus',
+                    type: 'error',
+                    content: `Ошибка при переводе контракта на следующий этап. Код: ${ err.status }. Причина: ${ err.data.message }`,
+                });
+            });
+        };
+
+        let newContractStatus: contractStatus = 'Ожидает подтверждения';
+
+        switch (contract.contract_status) {
+            case "Ожидает подтверждения":
+                newContractStatus = "В процессе выполнения";
+                break;
+            case "В процессе выполнения":
+                newContractStatus = "Выполнен";
+                break;
+            case "Выполнен":
+                newContractStatus = "Выполнен";
+                break;
+            default:
+                newContractStatus = "Отменен";
+                break;
+        }
+
+        messageUtility.showConfirmMessage({
+            title: 'Подтвердите действие',
+            content: 'Вы уверены что хотите перевести контракт на следующий этап?',
+            onOk(): void {
+                toChangeStatusContract(contractId, newContractStatus);
+            },
+            onCancel(): void {
+                console.log('cancel');
+            },
+        });
+    };
+
+    /**
+     * Метод завершающий контракт
+     * @param contractId - id контракта
+     */
+    const handleCompleteContract = (contractId: number): void => {
+        /**
+         * Завершает контракт
+         */
+        const toCompleteContract = (contractIdToComplete: number): void => {
+            messageUtility.showMessage({
+                key: 'contractComplete',
+                type: 'loading',
+                content: 'Идет завершение контракта...',
+            });
+
+            completeContract({
+                contractId: contractIdToComplete
+            }).unwrap().then((respContract: ICompleteContractResponse): void => {
+                if (respContract.success) {
+                    messageUtility.showMessage({
+                        key: 'contractComplete',
+                        type: 'success',
+                        content: 'Контракт успешно завершен',
+                    });
+
+                    dispatch(updateStatusContract({ contractID: contractIdToComplete, newStatus: 'Выполнен' }));
+                }
+            }).catch((err): void => {
+                messageUtility.showMessage({
+                    key: 'contractComplete',
+                    type: 'error',
+                    content: `Ошибка при завершении контракта. Код: ${ err.status }. Причина: ${ err.data.message }`,
+                });
+            });
+        };
+
+        messageUtility.showConfirmMessage({
+            title: 'Подтвердите действие',
+            content: 'Вы уверены что хотите перевести контракт в выполненные?',
+            onOk(): void {
+                toCompleteContract(contractId);
+            },
+            onCancel(): void {
+                console.log('cancel');
+            },
+        });
+    };
+
+    /**
      * Карточка отчета прибыльности контракта
      */
     const profitCard = (contract_amount: number, production_cost: number): React.JSX.Element => {
@@ -174,7 +303,34 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
     };
 
     return (
-        <Card title={ `ID - ${ contract.id } ` } bordered={ false }>
+        <Card title={
+            <div className={ 'flex justify-between' }>
+                <p>
+                    ID - { contract.id }
+                </p>
+                <div className={ 'space-x-2 my-auto' }>
+                    <Button
+                        disabled={
+                            contract.disable ||
+                            contract.contract_status === 'В процессе выполнения'
+                        }
+                        onClick={ () => handleChangeStatusContract(contract.id) }
+                    >
+                        Перевести контракт на следующий этап
+                    </Button>
+                    <Button
+                        disabled={
+                            contract.disable ||
+                            contract.contract_status === 'Ожидает подтверждения' ||
+                            contract.contract_status !== 'В процессе выполнения'
+                        }
+                        onClick={ () => handleCompleteContract(contract.id) }
+                    >
+                        Завершить контракт
+                    </Button>
+                </div>
+            </div>
+        } bordered={ false }>
             <Row gutter={ [10, 10] }>
                 <Col span={ 4 }>
                     <p>Покупатель</p>

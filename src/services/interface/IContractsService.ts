@@ -1,4 +1,4 @@
-import { contractStatus, contractType, customersCurrency } from "./globalTypes";
+import { contractStatus, contractType, customersCurrency, IResponseBase } from "./globalTypes";
 
 /**
  * Интерфейс контракта
@@ -16,15 +16,59 @@ export interface IContract {
     contract_type: contractType,
     currency: customersCurrency,
     contract_status: contractStatus,
-    production_cost: 200000000,
-    contract_amount: 300000000
+    production_cost: number,
+    contract_amount: number
 }
 
 /**
  * Интерфейс получения списка контрактов
  */
-export interface IGetContractsResponse {
-    success: boolean,
-    data: IContract[],
-    message?: string
+export interface IGetContractsResponse extends IResponseBase<any> {
+
+}
+
+/**
+ * Интерфейс запроса на завершение контракта
+ */
+export interface ICompleteContractRequest {
+    contractId: number,
+}
+
+/**
+ * Интерфейс ответа на запрос завершения контракта
+ */
+export interface ICompleteContractResponse extends IResponseBase<any> {
+
+}
+
+/**
+ * Интерфейс запроса на изменение статуса контракта
+ */
+export interface IChangeStatusContractRequest {
+    contractId: number,
+    bodyStatus: {
+        newStatus: contractStatus,
+    }
+
+}
+
+/**
+ * Интерфейс ответа на запрос изменения статуса контракта
+ */
+export interface IChangeStatusContractResponse extends IResponseBase<any> {
+
+}
+
+/**
+ * Интерфейс запроса на создание контракта
+ */
+export interface ICreateContractRequest extends Omit<IContract, 'id' | 'disable' | 'production_cost'> {
+
+}
+
+/**
+ * Интерфейс ответа на запрос создания контракта
+ */
+export interface ICreateContractResponse extends IResponseBase<IContract> {
+
 }

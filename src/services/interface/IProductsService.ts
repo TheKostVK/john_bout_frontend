@@ -1,3 +1,5 @@
+import { IResponseBase } from "./globalTypes";
+
 /**
  * Интерфейс модели товара
  */
@@ -26,17 +28,13 @@ export interface IProductCreateRequest extends Omit<IProduct, "id"> {}
 /**
  * Интерфейс ответа на запрос получения списка товаров.
  */
-export interface IGetProductsListResponse {
-    success: boolean,
-    data: IProduct[],
-    message?: string
+export interface IGetProductsListResponse extends IResponseBase<IProduct[]>{
+
 }
 
 /**
  * Интерфейс ответа на создание товара
  */
-export interface ICreateProductResponse {
-    success: boolean,
-    data: IProduct,
-    message?: string
+export interface ICreateProductResponse extends IResponseBase<IProduct>{
+
 }

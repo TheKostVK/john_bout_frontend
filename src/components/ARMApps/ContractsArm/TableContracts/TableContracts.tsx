@@ -1,4 +1,4 @@
-import { Table, TableColumnsType } from "antd";
+import { Table, TableColumnsType, Tag } from "antd";
 import React from "react";
 import { IContractsTable } from "../ContractsArm";
 import { useSelector } from "react-redux";
@@ -25,11 +25,13 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
             title: 'Покупатель',
             dataIndex: 'customer_id',
             render: (customer_id: string) => customers.find((customer: ICustomer): boolean => customer.id === Number(customer_id))?.name || customer_id,
+            sorter: (a: IContractsTable, b: IContractsTable) => a.customer_id - b.customer_id,
             width: 120,
         },
         {
             title: 'Тип контракта',
             dataIndex: 'contract_type',
+            sorter: (a: IContractsTable, b: IContractsTable) => a.contract_type.localeCompare(b.contract_type),
             width: 150,
         },
         {
@@ -38,23 +40,44 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
             key: 'contract_status',
             filters: contractStatus,
             onFilter: (value: any, record: IContractsTable): boolean => record.contract_status === value,
-            width: 150,
+            sorter: (a: IContractsTable, b: IContractsTable) => a.contract_status.localeCompare(b.contract_status),
+            render: (contract_status: boolean, record: IContractsTable): React.JSX.Element => {
+                if (record.disable) {
+                    return (
+                        <Tag color={ 'green-inverse' } key={ record.id }>
+                            { contract_status }
+                        </Tag>
+                    );
+                } else {
+                    return (
+                        <Tag color={ 'yellow-inverse' } key={ record.id }>
+                            { contract_status }
+                        </Tag>
+                    );
+                }
+            },
+            width: 100,
         },
         {
             title: 'Кол-во позиций',
             dataIndex: 'products_sales',
-            render: (products_sales: string) => products_sales.length || 'Неизвестно',
+            render: (products_sales: string) => `${ products_sales.length } поз.` || 'Неизвестно',
             width: 40,
         },
         {
             title: 'Сумма контракта',
             dataIndex: 'contract_amount',
-            render: (contract_amount: string): string => `${Number(contract_amount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} руб.`,
+            render: (contract_amount: string): string => `${ Number(contract_amount).toLocaleString('ru-RU', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) } руб.`,
+            sorter: (a: IContractsTable, b: IContractsTable) => a.contract_amount - b.contract_amount,
             width: 120,
         },
         {
             title: 'Валюта',
             dataIndex: 'currency',
+            sorter: (a: IContractsTable, b: IContractsTable) => a.currency.localeCompare(b.currency),
             width: 40,
         },
     ];

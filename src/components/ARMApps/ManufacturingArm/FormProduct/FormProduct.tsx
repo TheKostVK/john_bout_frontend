@@ -5,9 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { IWarehouse } from "../../../../services/interface/IWarehousesService";
 import { useCreateProductMutation } from "../../../../services/productsService";
-import { ICreateProductResponse, IProduct, IProductCreateRequest } from "../../../../services/interface/IProductsService";
+import {
+    ICreateProductResponse,
+    IProduct,
+    IProductCreateRequest
+} from "../../../../services/interface/IProductsService";
 import messageUtility from "../../../utility/messageUtility";
-import { setProducts } from "../../../../store/reducers/productsSlice";
+import { addProduct, setProducts } from "../../../../store/reducers/productsSlice";
 import { typeToSubtypes } from "../../../../constants";
 
 const { Option } = Select;
@@ -64,7 +68,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
     /**
      * Обработчик создания товара.
      */
-    const onFinish = (values: IProductCreateRequest) => {
+    const onFinish = (values: IProductCreateRequest): void => {
         messageUtility.showMessage({
             key: 'createProduct',
             type: 'loading',
@@ -72,10 +76,10 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
             content: 'Создание товара...'
         });
 
-        createProduct(values).unwrap().then((response: ICreateProductResponse) => {
+        createProduct(values).unwrap().then((response: ICreateProductResponse): void => {
             if (response.success) {
 
-                dispatch(setProducts([...products, response.data]));
+                dispatch(addProduct(response.data));
 
                 messageUtility.showMessage({
                     key: 'createProduct',
@@ -83,7 +87,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     content: 'Товар успешно создан'
                 });
             }
-        }).catch((error) => {
+        }).catch((error): void => {
             messageUtility.showMessage({
                 key: 'createProduct',
                 type: 'error',

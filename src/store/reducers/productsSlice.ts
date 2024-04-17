@@ -20,11 +20,18 @@ export const productsSlice = createSlice({
         setProducts: (state, action: PayloadAction<IProduct[]>): void => {
             state.products = action.payload;
         },
+        /**
+         * Добавляет товар.
+         */
+        addProduct: (state, action: PayloadAction<IProduct>): void => {
+            state.products.push(action.payload);
+        }
     },
 });
 
 export const {
     setProducts,
+    addProduct,
 } = productsSlice.actions;
 
 export default productsSlice.reducer

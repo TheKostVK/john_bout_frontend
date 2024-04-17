@@ -9,7 +9,7 @@ import {
     ICustomer
 } from "../../../../services/interface/ICustomersService";
 import { useCreateCustomersMutation } from "../../../../services/customersService";
-import { setCustomers } from "../../../../store/reducers/customersSlice";
+import { addCustomer, setCustomers } from "../../../../store/reducers/customersSlice";
 import { customerCurrency, customerType } from "../../../../constants";
 
 const { Option } = Select;
@@ -47,7 +47,7 @@ const FormCustomer: React.FC<Props> = ({ isCreate = true, initialValues }) => {
         createCustomer(values).unwrap().then((response: ICreateCustomerResponse) => {
             if (response.success) {
 
-                dispatch(setCustomers([...customers, response.data]));
+                dispatch(addCustomer(response.data));
 
                 messageUtility.showMessage({
                     key: 'createCustomer',
@@ -55,7 +55,7 @@ const FormCustomer: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                     content: 'Покупатель успешно создан'
                 });
             }
-        }).catch((error) => {
+        }).catch((error): void => {
             messageUtility.showMessage({
                 key: 'createCustomer',
                 type: 'error',

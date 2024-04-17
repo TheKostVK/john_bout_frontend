@@ -20,11 +20,18 @@ export const customersSlice = createSlice({
         setCustomers: (state, action: PayloadAction<ICustomer[]>): void => {
             state.customers = action.payload;
         },
+        /**
+         * Добавляет нового покупателя.
+         */
+        addCustomer: (state, action: PayloadAction<ICustomer>): void => {
+            state.customers.push(action.payload);
+        }
     },
 });
 
 export const {
-    setCustomers
+    setCustomers,
+    addCustomer
 } = customersSlice.actions;
 
 export default customersSlice.reducer

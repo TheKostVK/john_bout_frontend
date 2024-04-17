@@ -72,13 +72,13 @@ const WarehouseArm = () => {
             .unwrap()
             .then((warehousesResp: IGetWarehousesResponse): void => {
                 dispatch(setWarehouses(warehousesResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
                 key: 'WarehousesARMGetWarehousesError',
                 type: 'error',
-                content: 'Ошибка получения списка складов',
+                content: `Ошибка получения списка складов. Код: ${ err.status }. Причина: ${ err.data.message }`,
             });
         });
     };

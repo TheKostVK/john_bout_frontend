@@ -20,11 +20,18 @@ export const warehousesSlice = createSlice({
         setWarehouses: (state, action: PayloadAction<IWarehouse[]>): void => {
             state.warehouses = action.payload;
         },
+        /**
+         * Добавляет склад.
+         */
+        addWarehouse: (state, action: PayloadAction<IWarehouse>): void => {
+            state.warehouses.push(action.payload);
+        }
     },
 });
 
 export const {
     setWarehouses,
+    addWarehouse,
 } = warehousesSlice.actions;
 
 export default warehousesSlice.reducer

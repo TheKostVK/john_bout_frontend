@@ -186,7 +186,9 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         label="Описание товара"
                         rules={ [{ required: true, message: 'Введите описание товара' }] }
                     >
-                        <TextArea rows={ 4 }/>
+                        <TextArea
+                            autoSize={{ minRows: 1, maxRows: 6 }}
+                        />
                     </Form.Item>
                 </Col>
             </Row>

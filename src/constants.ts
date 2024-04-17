@@ -78,6 +78,20 @@ export const contractStatus: { text: string, value: string }[] = [
         text: 'Выполнен',
         value: 'Выполнен',
     },
+    {
+        text: 'Отменен',
+        value: 'Отменен',
+    }
+];
+
+/**
+ * Типы контрактов
+ */
+export const contractType: { text: string, value: string }[] = [
+    {
+        text: 'Поставка',
+        value: 'Поставка',
+    },
 ];
 
 /**

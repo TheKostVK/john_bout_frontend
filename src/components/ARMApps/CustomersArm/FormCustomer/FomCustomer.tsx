@@ -120,6 +120,7 @@ const FormCustomer: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         name="currency"
                         label="Валюта покупателя"
                         rules={ [{ required: true, message: 'Выберите валюту покупателя' }] }
+                        initialValue={ customerCurrency[0].value }
                     >
                         <Select placeholder="Выберите валюту покупателя">
                             { customerCurrency.map((type) => (

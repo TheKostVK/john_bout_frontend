@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import messageUtility from "../../utility/messageUtility";
-import { OrderedListOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined, OrderedListOutlined } from "@ant-design/icons";
 import TableContracts from "./TableContracts/TableContracts";
 import { IContract, IGetContractsResponse } from "../../../services/interface/IContractsService";
 import { useLazyGetContractsQuery } from "../../../services/contractsService";
 import { setContracts } from "../../../store/reducers/contractsSlice";
+import { FormContract } from "./FormContract/FormContract";
 
 const { Sider } = Layout;
 
@@ -40,6 +41,11 @@ const ContractsArm = () => {
             icon: <OrderedListOutlined/>,
             label: `Список контрактов`,
         },
+        {
+            key: `createContract`,
+            icon: <AppstoreAddOutlined/>,
+            label: `Создание контракта`,
+        },
     ];
 
     /**
@@ -50,6 +56,9 @@ const ContractsArm = () => {
             case `contractsList`:
                 setCurrentMenuOptions(0);
                 break;
+            case `createContract`:
+                setCurrentMenuOptions(1);
+                break;
             default:
                 break;
         }
@@ -58,12 +67,12 @@ const ContractsArm = () => {
     /**
      * Получение списка контрактов.
      */
-    const handleGetContracts = () => {
+    const handleGetContracts = (): void => {
         getContracts()
             .unwrap()
-            .then((contractsResp: IGetContractsResponse) => {
+            .then((contractsResp: IGetContractsResponse): void => {
                 dispatch(setContracts(contractsResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
@@ -80,7 +89,7 @@ const ContractsArm = () => {
     useEffect(() => {
         let data: IContractsTable[] = [];
 
-        contracts.map((contract: IContract, index: number) => {
+        contracts.map((contract: IContract, index: number): void => {
             data.push({
                 key: index,
                 ...contract
@@ -93,7 +102,7 @@ const ContractsArm = () => {
     /**
      * Получение списка контрактов при первом открытии АРМа.
      */
-    useEffect(() => {
+    useEffect((): void => {
         if (contracts.length !== 0) return;
 
         handleGetContracts();
@@ -113,6 +122,7 @@ const ContractsArm = () => {
 
             <div style={ { width: '100%', height: '660px', overflowY: 'scroll' } }>
                 { currentMenuOptions === 0 && <TableContracts tableData={ tableData }/> }
+                { currentMenuOptions === 1 && <FormContract isCreate={ true }/> }
             </div>
         </div>
     )

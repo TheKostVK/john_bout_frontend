@@ -59,6 +59,14 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
             width: 100,
         },
         {
+            title: 'Дата выполнения контракта',
+            dataIndex: 'contract_date',
+            key: 'contract_date',
+            render: (contract_date: string) => new Date(contract_date).toLocaleDateString('ru-RU', {}),
+            sorter: (a: IContractsTable, b: IContractsTable) => new Date(a.contract_date).getTime() - new Date(b.contract_date).getTime(),
+            width: 100,
+        },
+        {
             title: 'Кол-во позиций',
             dataIndex: 'products_sales',
             render: (products_sales: string) => `${ products_sales.length } поз.` || 'Неизвестно',

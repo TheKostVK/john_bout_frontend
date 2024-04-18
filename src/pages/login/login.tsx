@@ -63,15 +63,15 @@ const LoginPage = () => {
                 autoComplete="off"
             >
                 <Form.Item<ILoginRequest>
-                    label="email"
-                    name="email"
+                    label="Логин"
+                    name="username"
                     rules={ [{ required: true, message: 'Please input your username!' }] }
                 >
                     <Input/>
                 </Form.Item>
 
                 <Form.Item<ILoginRequest>
-                    label="Password"
+                    label="Пароль"
                     name="password"
                     rules={ [{ required: true, message: 'Please input your password!' }] }
                 >

@@ -4,7 +4,7 @@ import { IResponseBase } from "./globalTypes";
  * Интерфейс пользователя
  */
 export interface IUser {
-    email: string;
+    username: string;
     password: string;
 }
 
@@ -12,7 +12,7 @@ export interface IUser {
  * Интерфейс запроса авторизации
  */
 export interface ILoginRequest {
-    email: string;
+    username: string;
     password: string;
 }
 

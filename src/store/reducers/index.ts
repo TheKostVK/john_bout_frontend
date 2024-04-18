@@ -6,16 +6,21 @@ import { warehouseService } from "../../services/warehouseService";
 import { warehousesSlice } from "./warehousesSlice";
 import { contractsSlice } from "./contractsSlice";
 import { contractsService } from "../../services/contractsService";
-import financialSlice, { financialsSlice } from "./financialSlice";
+import { financialsSlice } from "./financialSlice";
 import { financialsService } from "../../services/financialService";
+import { authSlice } from "./authSlice";
+import { authService } from "../../services/authService";
+
 
 const reducers = {
+    authReducer: authSlice.reducer,
     productReducer: productsSlice.reducer,
     customerReducer: customersSlice.reducer,
     warehouseReducer: warehousesSlice.reducer,
     contractsReducer: contractsSlice.reducer,
     financialReducer: financialsSlice.reducer,
 
+    [authService.reducerPath]: authService.reducer,
     [productService.reducerPath]: productService.reducer,
     [customersService.reducerPath]: customersService.reducer,
     [warehouseService.reducerPath]: warehouseService.reducer,

@@ -23,11 +23,11 @@ import ContractsArm from "../../components/ARMApps/ContractsArm/ContractsArm";
 import { setContracts } from "../../store/reducers/contractsSlice";
 import { useLazyGetContractsQuery } from "../../services/contractsService";
 import { IGetContractsResponse } from "../../services/interface/IContractsService";
-import dayjs from "dayjs";
-import "dayjs/locale/ru";
 import { useLazyGetFinancialsQuery } from "../../services/financialService";
 import { IGetFinancialsResponse } from "../../services/interface/IFinancialsService";
 import { setFinancials } from "../../store/reducers/financialSlice";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
 
 dayjs.locale("ru");
 

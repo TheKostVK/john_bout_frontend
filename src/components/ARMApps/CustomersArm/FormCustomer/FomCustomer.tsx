@@ -59,7 +59,7 @@ const FormCustomer: React.FC<Props> = ({ isCreate = true, initialValues }) => {
             messageUtility.showMessage({
                 key: 'createCustomer',
                 type: 'error',
-                content: `Статус: ${ error.status }. Ошибка: ${ error.message }`
+                content: `Статус: ${ error.status }. Ошибка: ${ error.data.message }`
             });
         });
 

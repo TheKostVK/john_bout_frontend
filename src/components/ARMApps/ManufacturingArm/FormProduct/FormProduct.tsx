@@ -91,7 +91,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
             messageUtility.showMessage({
                 key: 'createProduct',
                 type: 'error',
-                content: `Статус: ${ error.status }. Ошибка: ${ error.message }`
+                content: `Статус: ${ error.status }. Ошибка: ${ error.data.message }`
             });
         });
 
@@ -297,7 +297,7 @@ const FormProduct: React.FC<Props> = ({ isCreate = true, initialValues }) => {
                         <InputNumber
                             style={ { width: '100%' } }
                             placeholder="Стоимость производства"
-                            formatter={ (value: any) => (
+                            formatter={ (value: any): string => (
                                 value === undefined || value === null ? '0.00' : `${ parseFloat(`${ value }`).toFixed(2) }`
                             ) }
                             min={ '0.00' }

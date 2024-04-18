@@ -51,12 +51,12 @@ const Main: React.FC = () => {
     /**
      * Получение списка клиентов.
      */
-    const handleGetCustomers = () => {
+    const handleGetCustomers = (): void => {
         getCustomers()
             .unwrap()
             .then((customersResp: IGetCustomersListResponse): void => {
                 dispatch(setCustomers(customersResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
@@ -75,7 +75,7 @@ const Main: React.FC = () => {
             .unwrap()
             .then((productsResp: IGetProductsListResponse): void => {
                 dispatch(setProducts(productsResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
@@ -94,7 +94,7 @@ const Main: React.FC = () => {
             .unwrap()
             .then((warehousesResp: IGetWarehousesResponse): void => {
                 dispatch(setWarehouses(warehousesResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
@@ -108,12 +108,12 @@ const Main: React.FC = () => {
     /**
      * Получение списка контрактов.
      */
-    const handleGetContracts = () => {
+    const handleGetContracts = (): void => {
         getContracts()
             .unwrap()
             .then((contractsResp: IGetContractsResponse): void => {
                 dispatch(setContracts(contractsResp.data));
-            }).catch((err) => {
+            }).catch((err): void => {
             console.error(err);
 
             messageUtility.showMessage({
@@ -127,7 +127,7 @@ const Main: React.FC = () => {
     /**
      * Получение всех данных при первом рендере приложения.
      */
-    useEffect(() => {
+    useEffect((): void => {
         handleGetCustomers();
         handleGetProducts();
         handleGetWarehouses();

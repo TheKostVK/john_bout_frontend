@@ -42,9 +42,15 @@ const TableCustomers = ({ tableData }: { tableData: IContractsTable[] }) => {
             onFilter: (value: any, record: IContractsTable): boolean => record.contract_status === value,
             sorter: (a: IContractsTable, b: IContractsTable) => a.contract_status.localeCompare(b.contract_status),
             render: (contract_status: boolean, record: IContractsTable): React.JSX.Element => {
-                if (record.disable) {
+                if (record.contract_status === 'Выполнен') {
                     return (
                         <Tag color={ 'green-inverse' } key={ record.id }>
+                            { contract_status }
+                        </Tag>
+                    );
+                }  else if (record.contract_status === 'Отменен') {
+                    return (
+                        <Tag color={ 'red-inverse' } key={ record.id }>
                             { contract_status }
                         </Tag>
                     );

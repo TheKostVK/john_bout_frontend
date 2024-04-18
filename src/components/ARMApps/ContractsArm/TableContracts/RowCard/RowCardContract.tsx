@@ -128,8 +128,9 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
     /**
      * Метод переводит контракт на следующий этап
      * @param contractId - id контракта
+     * @param cancellation - Флаг отмены контракта
      */
-    const handleChangeStatusContract = (contractId: number): void => {
+    const handleChangeStatusContract = (contractId: number, cancellation?: boolean): void => {
         /**
          * Завершает контракт
          */
@@ -137,7 +138,7 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
             messageUtility.showMessage({
                 key: 'contractChangeStatus',
                 type: 'loading',
-                content: 'Идет завершение контракта...',
+                content: 'Идет смена статуса контракта...',
             });
 
             changeStatusContract({
@@ -150,7 +151,7 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
                     messageUtility.showMessage({
                         key: 'contractChangeStatus',
                         type: 'success',
-                        content: 'Контракт успешно переведен на следующий этап',
+                        content: `${ newContractStatus === 'Отменен' ? 'Контракт успешно отменен' : 'Контракт успешно переведен на следующий этап'}`,
                     });
 
                     dispatch(updateStatusContract({ contractID: contractIdToComplete, newStatus: newContractStatus }));
@@ -185,7 +186,13 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
             title: 'Подтвердите действие',
             content: 'Вы уверены что хотите перевести контракт на следующий этап?',
             onOk(): void {
-                toChangeStatusContract(contractId, newContractStatus);
+                if (!cancellation) {
+                    toChangeStatusContract(contractId, newContractStatus);
+
+                    return;
+                }
+
+                toChangeStatusContract(contractId, newContractStatus = 'Отменен');
             },
             onCancel(): void {
                 console.log('cancel');
@@ -327,6 +334,12 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
                         onClick={ () => handleCompleteContract(contract.id) }
                     >
                         Завершить контракт
+                    </Button>
+                    <Button
+                        danger
+                        onClick={ () => handleChangeStatusContract(contract.id, true) }
+                    >
+                        Отменить контракт
                     </Button>
                 </div>
             </div>

@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Col, Divider, Row, Typography, Statistic, Table, TableColumnsType, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Card, Col, Divider, Row, Typography, Statistic, Table, TableColumnsType, Button, Steps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/store";
 import { IContractsTable } from "../../ContractsArm";
@@ -36,6 +36,8 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
 
     const [completeContract] = useCompleteContractMutation();
     const [changeStatusContract] = useChangeContractStatusMutation();
+
+    const [currentStepContract, setCurrentStepContract] = useState<1 | 2 | 3 | 4>(1);
 
     const dispatch = useDispatch();
 
@@ -151,7 +153,7 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
                     messageUtility.showMessage({
                         key: 'contractChangeStatus',
                         type: 'success',
-                        content: `${ newContractStatus === 'Отменен' ? 'Контракт успешно отменен' : 'Контракт успешно переведен на следующий этап'}`,
+                        content: `${ newContractStatus === 'Отменен' ? 'Контракт успешно отменен' : 'Контракт успешно переведен на следующий этап' }`,
                     });
 
                     dispatch(updateStatusContract({ contractID: contractIdToComplete, newStatus: newContractStatus }));
@@ -309,6 +311,26 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
         );
     };
 
+    /**
+     * Задает текущий прогресс контракта
+     */
+    useEffect((): void => {
+        switch (contract.contract_status) {
+            case "Ожидает подтверждения":
+                setCurrentStepContract(1);
+                break;
+            case "В процессе выполнения":
+                setCurrentStepContract(2);
+                break;
+            case "Выполнен":
+                setCurrentStepContract(3);
+                break;
+            default:
+                setCurrentStepContract(4);
+                break;
+        }
+    }, [contract]);
+
     return (
         <Card title={
             <div className={ 'flex justify-between' }>
@@ -319,7 +341,9 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
                     <Button
                         disabled={
                             contract.disable ||
-                            contract.contract_status === 'В процессе выполнения'
+                            contract.contract_status === 'В процессе выполнения' ||
+                            contract.contract_status === 'Отменен' ||
+                            contract.contract_status === 'Выполнен'
                         }
                         onClick={ () => handleChangeStatusContract(contract.id) }
                     >
@@ -337,6 +361,7 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
                     </Button>
                     <Button
                         danger
+                        disabled={ contract.disable || contract.contract_status === 'Отменен' || contract.contract_status === 'Выполнен' }
                         onClick={ () => handleChangeStatusContract(contract.id, true) }
                     >
                         Отменить контракт
@@ -345,6 +370,37 @@ const RowCardContract = ({ contract }: { contract: IContractsTable }) => {
             </div>
         } bordered={ false }>
             <Row gutter={ [10, 10] }>
+                <Col span={ 24 }>
+                    <Steps
+                        current={ currentStepContract }
+                        status={
+                            currentStepContract === 4 ? 'error' :
+                                currentStepContract === 3 ? 'finish' :
+                                    currentStepContract === 1 ? 'wait' :
+                                        'process'
+                        }
+                        items={ [
+                            {
+                                title: 'Создан',
+                            },
+                            {
+                                title: 'Ожидает подтверждения',
+                            },
+                            {
+                                title: 'В процессе выполнения',
+                            },
+                            {
+                                title: 'Выполнен',
+                            },
+                            {
+                                title: 'Отменен',
+                            },
+                        ] }
+                    />
+                </Col>
+            </Row>
+
+            <Row className={'mt-14'} gutter={ [10, 10] }>
                 <Col span={ 4 }>
                     <p>Покупатель</p>
                     <Title level={ 4 }>

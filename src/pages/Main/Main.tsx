@@ -25,6 +25,9 @@ import { useLazyGetContractsQuery } from "../../services/contractsService";
 import { IGetContractsResponse } from "../../services/interface/IContractsService";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
+import { useLazyGetFinancialsQuery } from "../../services/financialService";
+import { IGetFinancialsResponse } from "../../services/interface/IFinancialsService";
+import { setFinancials } from "../../store/reducers/financialSlice";
 
 dayjs.locale("ru");
 
@@ -45,6 +48,7 @@ const Main: React.FC = () => {
     const [getWarehouses] = useLazyGetWarehousesQuery();
     const [getProducts] = useLazyGetProductsQuery();
     const [getCustomers] = useLazyGetCustomersQuery();
+    const [getFinancials] = useLazyGetFinancialsQuery();
 
     const dispatch = useDispatch();
 
@@ -125,6 +129,25 @@ const Main: React.FC = () => {
     };
 
     /**
+     * Получение списка финансовых отчетов.
+     */
+    const handleGetFinancials = (): void => {
+        getFinancials({})
+            .unwrap()
+            .then((financialsResp: IGetFinancialsResponse): void => {
+                dispatch(setFinancials(financialsResp.data));
+            }).catch((err): void => {
+            console.error(err);
+
+            messageUtility.showMessage({
+                key: 'FinancialsARMGetProductsError',
+                type: 'error',
+                content: 'Ошибка получения списка финансовых отчетов',
+            });
+        });
+    };
+
+    /**
      * Получение всех данных при первом рендере приложения.
      */
     useEffect((): void => {
@@ -132,6 +155,7 @@ const Main: React.FC = () => {
         handleGetProducts();
         handleGetWarehouses();
         handleGetContracts();
+        handleGetFinancials();
     }, []);
 
     /**

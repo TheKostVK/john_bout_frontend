@@ -5,6 +5,7 @@ import { customersService } from "../services/customersService";
 import { warehouseService } from "../services/warehouseService";
 import { contractsService } from "../services/contractsService";
 import { financialsService } from "../services/financialService";
+import { authService } from "../services/authService";
 
 const rootReducer = combineReducers(reducers);
 
@@ -14,6 +15,7 @@ export const setupStore = () => {
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware()
                 .concat(
+                    authService.middleware,
                     productService.middleware,
                     customersService.middleware,
                     warehouseService.middleware,
